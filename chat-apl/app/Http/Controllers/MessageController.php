@@ -8,6 +8,31 @@ use Illuminate\Http\JsonResponse;
 
 class MessageController extends Controller
 {
+    public function getMessages(Conversation $conversation) {
+        return response()->json($conversation->messages);
+    }
+
+    public function store(Request $request, Conversation $conversation) {
+        $message = $conversation->messages()->create($request->all());
+
+        
+        Broadcast::event(new \App\Events\MessageSent($message));
+
+        return response()->json($message, 201);
+    }
+
+    public function update(Request $request, Message $message) {
+        $message->update($request->all());
+        return response()->json($message, 200);
+    }
+    public function destroy(Message $message) {
+        $message->delete();
+        return response()->json(['message' => 'Message deleted successfully'], 200);
+    }
+ 
+
+
+    
     public function sendMessageWithAttachment(Request $request): JsonResponse
     {
         $request->validate([
