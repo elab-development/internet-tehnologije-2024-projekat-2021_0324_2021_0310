@@ -20,4 +20,22 @@ class User extends Authenticatable
     {
         return $this->belongsToMany(Conversation::class);
     }
+    
+
+    //
+    protected $fillable = [
+        'name', 'email', 'password', 'role'
+    ];
+
+    public function isAdmin() {
+        return $this->role === 'admin';
+    }
+    
+    public function isModerator() {
+        return $this->role === 'moderator';
+    }
+    
+    public function isUser() {
+        return $this->role === 'user';
+    }
 }

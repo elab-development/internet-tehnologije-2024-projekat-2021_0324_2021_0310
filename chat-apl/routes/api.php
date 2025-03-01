@@ -1,5 +1,4 @@
 <?php
-
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\UserController;
@@ -7,9 +6,60 @@ use App\Http\Controllers\ConversationController;
 use App\Http\Controllers\MessageController;
 use App\Http\Controllers\MessageAttachmentController;
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\AdminController;
+use App\Http\Controllers\ModeratorController;
+use App\Http\Controllers\ReportController;
 use Illuminate\Support\Facades\Broadcast;
 use App\Events\MessageSent;
 
+// Autentifikacija korisnika
+Route::post('/register', [AuthController::class, 'register']);
+Route::post('/login', [AuthController::class, 'login']);
+
+Route::middleware('auth:sanctum')->group(function () {
+    Route::post('/logout', [AuthController::class, 'logout']);
+    
+    // Resursna ruta za poruke
+    Route::apiResource('messages', MessageController::class)->middleware('own-data');
+    
+    // API rute za chat aplikaciju
+    Route::get('/conversations', [ConversationController::class, 'index']);
+    Route::post('/conversations', [ConversationController::class, 'store']);
+    Route::get('/conversations/{conversation}/messages', [MessageController::class, 'getMessages']);
+    Route::post('/conversations/{conversation}/messages', [MessageController::class, 'store']);
+    Route::post('/messages/{message}/attachments', [MessageAttachmentController::class, 'store']);
+    Route::delete('/conversations/{conversation}', [ConversationController::class, 'destroy']);
+    Route::put('/messages/{message}', [MessageController::class, 'update']);
+    Route::delete('/messages/{message}', [MessageController::class, 'destroy']);
+    
+    // ADMIN rute
+    Route::middleware('role:admin')->group(function () {
+        Route::get('/admin/stats', [AdminController::class, 'stats']);
+        Route::get('/admin/users', [AdminController::class, 'listUsers']);
+        Route::delete('/admin/users/{user}', [AdminController::class, 'deleteUser']);
+    });
+
+    // MODERATOR rute
+    Route::middleware('role:moderator')->group(function () {
+        Route::get('/moderator/reported-messages', [ModeratorController::class, 'reportedMessages']);
+        Route::post('/moderator/suspend-user/{user}', [ModeratorController::class, 'suspendUser']);
+    });
+
+    // Prijavljivanje korisnika
+    Route::post('/report-user/{user}', [ReportController::class, 'reportUser']);
+    Route::get('/report-reasons', [ReportController::class, 'getReportReasons']);
+
+
+
+});
+
+
+
+
+
+
+
+/*
 // Autentifikacija korisnika
 Route::post('/register', [AuthController::class, 'register']);
 Route::post('/login', [AuthController::class, 'login']);
@@ -44,4 +94,4 @@ Route::middleware('auth:sanctum')->group(function () {
     
     // Brisanje poruke
     Route::delete('/messages/{message}', [MessageController::class, 'destroy']);
-});
+});*/

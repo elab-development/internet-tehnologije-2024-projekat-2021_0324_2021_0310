@@ -19,6 +19,7 @@ class AuthController extends Controller
             'name' => $request->name,
             'email' => $request->email,
             'password' => Hash::make($request->password),
+            'role' => 'user' //dodato zbog uloga,podrazumeva se da je user obican
         ]);
 
         return response()->json(['message' => 'User registered successfully'], 201);
