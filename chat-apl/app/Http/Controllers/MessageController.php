@@ -21,10 +21,10 @@ class MessageController extends Controller
         return response()->json($message, 201);
     }
 
-    public function update(Request $request, Message $message) {
+    /*public function update(Request $request, Message $message) {
         $message->update($request->all());
         return response()->json($message, 200);
-    }
+    }*/
     public function destroy(Message $message) {
         $message->delete();
         return response()->json(['message' => 'Message deleted successfully'], 200);
