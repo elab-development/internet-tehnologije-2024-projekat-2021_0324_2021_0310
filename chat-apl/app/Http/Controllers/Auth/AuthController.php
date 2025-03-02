@@ -5,6 +5,8 @@ use App\Models\User;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Validator;
+use GuzzleHttp\Client;
 
 class AuthController extends Controller
 {
@@ -45,4 +47,43 @@ class AuthController extends Controller
         $request->user()->tokens()->delete();
         return response()->json(['message' => 'Logged out successfully'], 200);
     }
+
+    public function resetPassword(Request $request)
+{
+    $validator = Validator::make($request->all(), [
+        'email' => 'required|email|exists:users,email',
+        'password' => 'required|min:8|confirmed',
+        'g-recaptcha-response' => 'required',
+    ]);
+
+    if ($validator->fails()) {
+        return response()->json(['errors' => $validator->errors()], 422);
+    }
+
+    // Verifikacija Google reCAPTCHA
+    $client = new Client();
+    $response = $client->post('https://www.google.com/recaptcha/api/siteverify', [
+        'form_params' => [
+            'secret' => env('RECAPTCHA_SECRET_KEY'),
+            'response' => $request->input('g-recaptcha-response')
+        ]
+    ]);
+
+    $body = json_decode((string) $response->getBody(), true);
+
+    if (!$body['success']) {
+        return response()->json(['error' => 'CAPTCHA verifikacija nije uspela.'], 422);
+    }
+
+    // Promena lozinke ako CAPTCHA uspe
+    $user = User::where('email', $request->email)->first();
+    if (!$user) {
+        return response()->json(['error' => 'Korisnik nije pronađen.'], 404);
+    }
+
+    $user->password = Hash::make($request->password);
+    $user->save();
+
+    return response()->json(['message' => 'Lozinka uspešno promenjena.']);
+}   
 }
