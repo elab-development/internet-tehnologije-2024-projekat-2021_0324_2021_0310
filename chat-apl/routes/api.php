@@ -49,7 +49,12 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('/report-user/{user}', [ReportController::class, 'reportUser']);
     Route::get('/report-reasons', [ReportController::class, 'getReportReasons']);
 
+    // Upload i preuzimanje dokumenata
+    Route::post('/messages/{message}/attachments', [MessageAttachmentController::class, 'store']);
+    Route::get('/attachments/{id}/download', [MessageAttachmentController::class, 'download']);
 
+    // Slanje poruka sa prilozima
+    Route::post('/messages/send-with-attachments', [MessageController::class, 'sendMessageWithAttachment']);
 
 });
 

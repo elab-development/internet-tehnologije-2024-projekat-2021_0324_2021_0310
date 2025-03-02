@@ -27,7 +27,7 @@ class MessageController extends Controller
     }*/
     public function destroy(Message $message) {
         $message->delete();
-        return response()->json(['message' => 'Message deleted successfully'], 200);
+        return response()->json(['message' => 'Poruka obrisana uspesno'], 200);
     }
  
 
@@ -47,11 +47,10 @@ class MessageController extends Controller
             'conversation_id' => $request->conversation_id,
             'content' => $request->content ?? '',
         ]);
-
         if ($request->hasFile('attachments')) {
             foreach ($request->file('attachments') as $file) {
                 $path = $file->store('attachments', 'public');
-                Attachment::create([
+                MessageAttachment::create([
                     'message_id' => $message->id,
                     'file_path' => $path,
                     'file_type' => $file->getClientMimeType(),
@@ -60,7 +59,7 @@ class MessageController extends Controller
         }
 
         return response()->json([
-            'message' => 'Poruka poslata!',
+            'message' => 'Poruka poslata',
             'data' => $message->load('attachments')
         ], 201);
     }
