@@ -59,6 +59,13 @@ Route::middleware('auth:sanctum')->group(function () {
     // Slanje poruka sa prilozima
     Route::post('/messages/send-with-attachments', [MessageController::class, 'sendMessageWithAttachment']);
 
+    
+     // Pretraga po kriterijumima
+     Route::get('/search/users', [UserController::class, 'searchUsers']);
+     Route::get('/search/messages', [MessageController::class, 'searchMessages']);
+     Route::get('/search/conversations', [ConversationController::class, 'searchConversations']);
+
+
 });
 
 

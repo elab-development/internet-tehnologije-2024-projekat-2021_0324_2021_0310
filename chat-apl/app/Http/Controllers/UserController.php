@@ -16,4 +16,23 @@ class UserController extends Controller
     {
         return response()->json(['user' => $user]);
     }
+    
+    public function searchUsers(Request $request) {
+        $query = User::query();
+
+        if ($request->has('name')) {
+            $query->where('name', 'LIKE', '%' . $request->name . '%');
+        }
+        if ($request->has('email')) {
+            $query->where('email', 'LIKE', '%' . $request->email . '%');
+        }
+        if ($request->has('id')) {
+            $query->where('id', $request->id);
+        }
+
+        return response()->json($query->get());
+    }
+
+    
+
 }

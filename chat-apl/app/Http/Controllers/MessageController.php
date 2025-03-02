@@ -63,4 +63,24 @@ class MessageController extends Controller
             'data' => $message->load('attachments')
         ], 201);
     }
+
+
+    public function searchMessages(Request $request) {
+        $query = Message::query();
+
+        if ($request->has('content')) {
+            $query->where('content', 'LIKE', '%' . $request->content . '%');
+        }
+        if ($request->has('user_id')) {
+            $query->where('user_id', $request->user_id);
+        }
+        if ($request->has('conversation_id')) {
+            $query->where('conversation_id', $request->conversation_id);
+        }
+
+        return response()->json($query->get());
+    }
+
+
+
 }
