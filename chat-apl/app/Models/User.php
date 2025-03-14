@@ -6,10 +6,10 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
-
+use Laravel\Sanctum\HasApiTokens;
 class User extends Authenticatable
 {
-    use HasFactory, Notifiable;
+    use HasApiTokens, Notifiable, HasFactory;
 
     public function messages()
     {
@@ -18,7 +18,7 @@ class User extends Authenticatable
 
     public function conversations()
     {
-        return $this->belongsToMany(Conversation::class);
+        return $this->belongsToMany(Conversation::class, 'conversation_user', 'user_id', 'conversation_id');
     }
     
 

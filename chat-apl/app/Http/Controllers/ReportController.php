@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\User;
+use Config;
 use Illuminate\Http\Request;
 
 class ReportController extends Controller

@@ -13,11 +13,26 @@ return [
     |
     */
 
-    'defaults' => [
-        'guard' => env('AUTH_GUARD', 'web'),
-        'passwords' => env('AUTH_PASSWORD_BROKER', 'users'),
+   'defaults' => [
+    'guard' => 'sanctum',
+    'passwords' => 'users',
+],
+
+
+    'api' => [
+        \Laravel\Sanctum\Http\Middleware\EnsureFrontendRequestsAreStateful::class,
+        'throttle:api',
+        \Illuminate\Routing\Middleware\SubstituteBindings::class,
     ],
 
+    'passwords' => [
+    'users' => [
+        'provider' => 'users',
+        'table' => 'password_resets',
+        'expire' => 60, // Link važi 60 minuta
+        'throttle' => 60,
+    ],
+],
     /*
     |--------------------------------------------------------------------------
     | Authentication Guards
@@ -90,14 +105,6 @@ return [
     |
     */
 
-    'passwords' => [
-        'users' => [
-            'provider' => 'users',
-            'table' => env('AUTH_PASSWORD_RESET_TOKEN_TABLE', 'password_reset_tokens'),
-            'expire' => 60,
-            'throttle' => 60,
-        ],
-    ],
 
     /*
     |--------------------------------------------------------------------------

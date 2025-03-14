@@ -1,6 +1,9 @@
 <?php
 namespace App\Http\Controllers;
 
+use App\Models\Conversation;
+use App\Models\MessageAttachment;
+use Broadcast;
 use Illuminate\Http\Request;
 use App\Models\Message;
 use App\Models\Attachment;
@@ -16,7 +19,7 @@ class MessageController extends Controller
         $message = $conversation->messages()->create($request->all());
 
         
-        Broadcast::event(new \App\Events\MessageSent($message));
+        //Broadcast::event(new \App\Events\MessageSent($message));
 
         return response()->json($message, 201);
     }

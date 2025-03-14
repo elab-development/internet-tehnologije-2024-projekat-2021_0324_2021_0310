@@ -1,5 +1,4 @@
 <?php
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\ConversationController;
@@ -9,8 +8,11 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\ModeratorController;
 use App\Http\Controllers\ReportController;
-use Illuminate\Support\Facades\Broadcast;
-use App\Events\MessageSent;
+
+Route::get('/greeting', function () {
+    return response()->json(['message' => 'Hello World'], 201);
+});
+
 
 // Autentifikacija korisnika
 Route::post('/register', [AuthController::class, 'register']);
@@ -21,7 +23,6 @@ Route::get('/captcha', [AuthController::class, 'getCaptcha']);
 
 Route::middleware('auth:sanctum')->group(function () {
     Route::post('/logout', [AuthController::class, 'logout']);
-    
     // Resursna ruta za poruke
     Route::apiResource('messages', MessageController::class)->middleware('own-data');
     
@@ -30,11 +31,11 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('/conversations', [ConversationController::class, 'store']);
     Route::get('/conversations/{conversation}/messages', [MessageController::class, 'getMessages']);
     Route::post('/conversations/{conversation}/messages', [MessageController::class, 'store']);
-    Route::post('/messages/{message}/attachments', [MessageAttachmentController::class, 'store']);
     Route::delete('/conversations/{conversation}', [ConversationController::class, 'destroy']);
     Route::put('/messages/{message}', [MessageController::class, 'update']);
     Route::delete('/messages/{message}', [MessageController::class, 'destroy']);
     
+    Route::post('/messages/{message}/attachments', [MessageAttachmentController::class, 'store']);
     // ADMIN rute
     Route::middleware('role:admin')->group(function () {
         Route::get('/admin/stats', [AdminController::class, 'stats']);

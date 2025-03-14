@@ -2,28 +2,48 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Conversation;
 use Illuminate\Http\Request;
 
 class ConversationController extends Controller
 {
-    
-    public function index(Request $request) {
-        return response()->json(Conversation::where('user_id', $request->user()->id)->get());
-    }
 
-    public function store(Request $request) {
-        $conversation = Conversation::create($request->all());
-        return response()->json($conversation, 201);
+    public function index(Request $request)
+    {
+        return response()->json($request->user()->conversations);
 
     }
 
-    public function destroy(Conversation $conversation) {
+    public function store(Request $request)
+    {
+        // Validacija
+        $request->validate([
+            'name' => 'nullable|string', // Naziv konverzacije može biti null
+            'users' => 'required|array|min:2', // Mora biti najmanje 2 korisnika
+            'users.*' => 'exists:users,id' // Svaki korisnik mora postojati u bazi
+        ]);
+
+        // Kreiranje konverzacije
+        $conversation = Conversation::create([
+            'name' => $request->name,
+            'created_by' => auth()->id() // Ili $request->user()->id
+        ]);
+
+        // Dodavanje korisnika u konverzaciju (u pivot tabelu `conversation_user`)
+        $conversation->users()->attach($request->users);
+
+        return response()->json($conversation->load('users'), 201);
+    }
+
+    public function destroy(Conversation $conversation)
+    {
         $conversation->delete();
         return response()->json(['message' => 'Conversation deleted successfully'], 200);
     }
 
 
-    public function searchConversations(Request $request) {
+    public function searchConversations(Request $request)
+    {
         $query = Conversation::query();
 
         if ($request->has('user_id')) {

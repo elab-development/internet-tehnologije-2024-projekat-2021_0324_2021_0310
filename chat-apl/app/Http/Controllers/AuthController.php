@@ -1,10 +1,10 @@
 <?php
-
 namespace App\Http\Controllers;
 use App\Models\User;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Password;
 use Illuminate\Support\Facades\Validator;
 use GuzzleHttp\Client;
 
@@ -23,29 +23,54 @@ class AuthController extends Controller
             'password' => Hash::make($request->password),
             'role' => 'user' //dodato zbog uloga,podrazumeva se da je user obican
         ]);
-
-        return response()->json(['message' => 'User registered successfully'], 201);
-    }
-
-    public function login(Request $request) {
-        $request->validate([
-            'email' => 'required|string|email',
-            'password' => 'required|string',
-        ]);
-
-        if (!Auth::attempt($request->only('email', 'password'))) {
-            return response()->json(['message' => 'Invalid credentials'], 401);
-        }
-
-        $user = Auth::user();
         $token = $user->createToken('auth_token')->plainTextToken;
-        
-        return response()->json(['token' => $token, 'user' => $user], 200);
+        return response()->json([
+            'message' => 'Korisnik uspešno registrovan!',
+            'user' => $user,
+            'token' => $token,
+        ], 201);
     }
+
+    public function login(Request $request)
+{
+    $request->validate([
+        'email' => 'required|string|email',
+        'password' => 'required|string',
+    ]);
+
+    // Pronalazak korisnika u bazi
+    $user = User::where('email', $request->email)->first();
+
+    // Provera da li korisnik postoji i da li se lozinka poklapa
+    if (!$user || !Hash::check($request->password, $user->password)) {
+        return response()->json(['message' => 'Neispravan email ili lozinka'], 401);
+    }
+
+    // Generisanje API tokena (Sanctum)
+    $token = $user->createToken('auth_token')->plainTextToken;
+
+    return response()->json([
+        'message' => 'Uspešno prijavljen',
+        'token' => $token,
+        'user' => $user
+    ], 200);
+}
 
     public function logout(Request $request) {
-        $request->user()->tokens()->delete();
-        return response()->json(['message' => 'Logged out successfully'], 200);
+           $user = $request->user();
+
+        if ($user) {
+            // Briše samo trenutni token korisnika
+            $user->currentAccessToken()->delete();
+
+            return response()->json([
+                'message' => 'Uspešno ste se odjavili!'
+            ], 200);
+        }
+
+        return response()->json([
+            'message' => 'Neautorizovan korisnik!'
+        ], 401);    
     }
 
     public function resetPassword(Request $request)
@@ -86,4 +111,21 @@ class AuthController extends Controller
 
     return response()->json(['message' => 'Lozinka uspešno promenjena.']);
 }   
+public function forgotPassword(Request $request)
+    {
+        // Validacija email-a
+        $request->validate([
+            'email' => 'required|email|exists:users,email',
+        ]);
+
+        // Slanje email-a sa linkom za reset lozinke
+        $status = Password::sendResetLink($request->only('email'));
+
+        // Vraćanje odgovora na osnovu statusa
+        if ($status === Password::RESET_LINK_SENT) {
+            return response()->json(['message' => 'Link za resetovanje lozinke je poslat.'], 200);
+        }
+
+        return response()->json(['message' => 'Greška pri slanju linka.'], 400);
+    }
 }
