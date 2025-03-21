@@ -1,0 +1,80 @@
+.login-container {
+  min-height: 100vh;
+  background: linear-gradient(to bottom right, #cfe9ff, #ccffcc);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 20px;
+}
+
+.login-card {
+  background-color: white;
+  padding: 40px;
+  border-radius: 24px;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+  width: 100%;
+  max-width: 440px; /* povećano sa 400px */
+}
+
+.login-title {
+  text-align: center;
+  margin-bottom: 25px;
+  color: #222;
+  font-size: 28px;
+}
+
+.form-group {
+  margin-bottom: 20px;
+  display: flex;
+  flex-direction: column;
+}
+
+.form-group label {
+  margin-bottom: 6px;
+  color: #444;
+  font-size: 1rem;
+}
+
+.form-group input {
+  padding: 14px;
+  border: 1px solid #bbb;
+  border-radius: 10px;
+  font-size: 1rem;
+}
+
+.links {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 12px;
+}
+
+.link-btn {
+  background: none;
+  border: none;
+  color: #1a73e8;
+  cursor: pointer;
+  font-size: 0.95rem;
+  padding: 0;
+}
+
+.link-btn:hover {
+  text-decoration: underline;
+}
+
+.login-btn {
+  margin-top: 25px;
+  width: 100%;
+  background-color: #1a73e8;
+  color: white;
+  border: none;
+  padding: 14px;
+  border-radius: 12px;
+  font-size: 1.05rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.login-btn:hover {
+  background-color: #155ab6;
+}
