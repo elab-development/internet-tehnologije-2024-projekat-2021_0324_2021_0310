@@ -1,4 +1,5 @@
-import React from 'react'
+import React from 'react';
+import { Link } from "react-router-dom";
 
 function LoginPage() {
     return (
@@ -14,8 +15,8 @@ function LoginPage() {
               <input type="password" placeholder="Unesite lozinku" />
             </div>
             <div className="links">
-              <button className="link-btn">Zaboravljena lozinka?</button>
-              <button className="link-btn">Registruj se</button>
+            <Link to="/forgot-password" className="link-btn">Zaboravljena lozinka?</Link>
+              <Link to="/register" className="link-btn">Registruj se</Link>
             </div>
             <button className="login-btn">Prijavi se</button>
           </div>
