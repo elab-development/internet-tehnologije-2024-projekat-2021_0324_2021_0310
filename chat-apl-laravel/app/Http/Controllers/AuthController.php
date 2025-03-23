@@ -73,11 +73,10 @@ class AuthController extends Controller
         ], 401);    
     }
 
-    public function resetPassword(Request $request)
+    public function forgotPassword(Request $request)
 {
     $validator = Validator::make($request->all(), [
         'email' => 'required|email|exists:users,email',
-        'password' => 'required|min:8|confirmed',
         'g-recaptcha-response' => 'required',
     ]);
 
@@ -111,21 +110,26 @@ class AuthController extends Controller
 
     return response()->json(['message' => 'Lozinka uspešno promenjena.']);
 }   
-public function forgotPassword(Request $request)
+public function resetPassword(Request $request)
     {
-        // Validacija email-a
-        $request->validate([
+        $validator = Validator::make($request->all(), [
             'email' => 'required|email|exists:users,email',
+            'password' => 'required|min:8|confirmed',
         ]);
-
-        // Slanje email-a sa linkom za reset lozinke
-        $status = Password::sendResetLink($request->only('email'));
-
-        // Vraćanje odgovora na osnovu statusa
-        if ($status === Password::RESET_LINK_SENT) {
-            return response()->json(['message' => 'Link za resetovanje lozinke je poslat.'], 200);
+    
+        if ($validator->fails()) {
+            return response()->json(['errors' => $validator->errors()], 422);
         }
-
-        return response()->json(['message' => 'Greška pri slanju linka.'], 400);
+    
+        $user = User::where('email', $request->email)->first();
+    
+        if (!$user) {
+            return response()->json(['error' => 'Korisnik nije pronađen.'], 404);
+        }
+    
+        $user->password = Hash::make($request->password);
+        $user->save();
+    
+        return response()->json(['message' => 'Lozinka uspešno promenjena.']);
     }
 }
