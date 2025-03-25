@@ -8,6 +8,7 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\ModeratorController;
 use App\Http\Controllers\ReportController;
+use App\Http\Controllers\ChatController;
 
 Route::get('/greeting', function () {
     return response()->json(['message' => 'Hello World'], 201);
@@ -66,7 +67,7 @@ Route::middleware('auth:sanctum')->group(function () {
      Route::get('/search/messages', [MessageController::class, 'searchMessages']);
      Route::get('/search/conversations', [ConversationController::class, 'searchConversations']);
 
-
+     Route::middleware('auth:sanctum')->get('/chats', [ChatController::class, 'index']);
 });
 
 

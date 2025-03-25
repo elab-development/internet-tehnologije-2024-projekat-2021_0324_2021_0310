@@ -12,7 +12,12 @@ use Illuminate\Http\JsonResponse;
 class MessageController extends Controller
 {
     public function getMessages(Conversation $conversation) {
-        return response()->json($conversation->messages);
+        $messages = $conversation->messages()
+        ->select('id', 'content', 'user_id', 'created_at') // biramo samo potrebne kolone
+        ->orderBy('created_at')
+        ->get();
+
+    return response()->json($messages);
     }
 
     public function store(Request $request, Conversation $conversation) {

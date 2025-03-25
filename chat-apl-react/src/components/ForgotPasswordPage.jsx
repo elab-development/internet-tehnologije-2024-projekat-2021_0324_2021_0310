@@ -23,7 +23,7 @@ export default function ForgotPasswordPage() {
         },
         body: JSON.stringify({
           email,
-          "g-recaptcha-response": captchaToken, // <- ovo je ključno!
+          "g-recaptcha-response": captchaToken, // ovo je ključno
         }),
       });
   
@@ -72,7 +72,7 @@ export default function ForgotPasswordPage() {
           </p>
         )}
 
-        <button className="login-btn" onClick={handleSubmit}>Pošalji</button>
+        <button className="login-btn" onClick={handleSubmit}>Nastavi</button>
         <Link to="/" className="back-link">Nazad na login</Link>
       </div>
     </div>

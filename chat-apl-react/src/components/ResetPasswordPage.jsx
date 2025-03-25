@@ -45,10 +45,10 @@ export default function ResetPasswordPage() {
       if (response.ok) {
         localStorage.removeItem("resetEmail");
 
-        // 👇 Prikaži alert popup
+        // Prikaži alert popup
         alert(data.message || "Lozinka je uspešno promenjena.");
 
-        // ✅ Kada korisnik klikne OK, preusmeri na login
+        // Kada korisnik klikne OK, preusmeri na login
         navigate("/");
       } else if (data.errors) {
         const allErrors = Object.values(data.errors).flat().join(" ");

@@ -26,13 +26,15 @@ export default function LoginPage() {
       });
 
       const data = await response.json();
-
+      console.log(data);
       if (response.ok) {
         setSuccessMessage("Uspešno ste ulogovani!");
         setError("");
 
-        // opcionalno: sačuvaj token ako backend šalje
-        // localStorage.setItem("token", data.token);
+        //opcionalno: sačuvaj token ako backend šalje
+        localStorage.setItem("token", data.token);
+        localStorage.setItem("email", data.user.email);
+        localStorage.setItem("userId", data.user.id);
 
         setTimeout(() => {
           navigate("/chat");
