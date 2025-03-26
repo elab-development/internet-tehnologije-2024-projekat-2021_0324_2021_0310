@@ -21,12 +21,34 @@ class MessageController extends Controller
     }
 
     public function store(Request $request, Conversation $conversation) {
-        $message = $conversation->messages()->create($request->all());
+        /*$message = $conversation->messages()->create($request->all());
 
         
         //Broadcast::event(new \App\Events\MessageSent($message));
+        return response()->json($message->load('user'), 201);
+       // return response()->json($message, 201);*/
+       $request->validate([
+        'user_id' => 'required|exists:users,id',
+        'content' => 'nullable|string',
+        'attachments.*' => 'file|max:2048',
+    ]);
 
-        return response()->json($message, 201);
+    $message = $conversation->messages()->create([
+        'user_id' => $request->user_id,
+        'content' => $request->content ?? '',
+    ]);
+
+    if ($request->hasFile('attachments')) {
+        foreach ($request->file('attachments') as $file) {
+            $path = $file->store('attachments', 'public');
+            $message->attachments()->create([
+                'file_path' => $path,
+                'file_type' => $file->getClientMimeType(),
+            ]);
+        }
+    }
+
+    return response()->json($message->load(['attachments', 'user']), 201);
     }
 
     /*public function update(Request $request, Message $message) {
@@ -43,18 +65,25 @@ class MessageController extends Controller
     
     public function sendMessageWithAttachment(Request $request): JsonResponse
     {
-        $request->validate([
+        $validator = Validator::make($request->all(), [
             'user_id' => 'required|exists:users,id',
             'conversation_id' => 'required|exists:conversations,id',
             'content' => 'nullable|string',
-            'attachments.*' => 'file|max:2048', // Ograničenje na 2MB po fajlu
+            'attachments.*' => 'file|max:2048', // maksimalno 2MB po fajlu
         ]);
-
+    
+        if ($validator->fails()) {
+            return response()->json(['errors' => $validator->errors()], 422);
+        }
+    
+        // Kreiranje poruke
         $message = Message::create([
             'user_id' => $request->user_id,
             'conversation_id' => $request->conversation_id,
             'content' => $request->content ?? '',
         ]);
+    
+        // Snimi fajlove ako ih ima
         if ($request->hasFile('attachments')) {
             foreach ($request->file('attachments') as $file) {
                 $path = $file->store('attachments', 'public');
@@ -65,10 +94,11 @@ class MessageController extends Controller
                 ]);
             }
         }
-
+    
+        // Vrati poruku zajedno sa pošiljaocem i prilozima
         return response()->json([
             'message' => 'Poruka poslata',
-            'data' => $message->load('attachments')
+            'data' => $message->load(['attachments', 'user:id,email,name']) // za prikaz pošiljaoca u Reactu
         ], 201);
     }
 

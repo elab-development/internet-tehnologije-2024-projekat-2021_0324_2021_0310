@@ -7,27 +7,20 @@ export default function ChatPage() {
   const [selectedChat, setSelectedChat] = useState(null);
   const [messages, setMessages] = useState([]);
   const [search, setSearch] = useState("");
+  const [newMessage, setNewMessage] = useState("");
+  const [attachments, setAttachments] = useState([]);
 
   const navigate = useNavigate();
-
   const token = localStorage.getItem("token");
-  const currentUserId = parseInt(localStorage.getItem("userId")); 
-  console.log("ulogovani korisnik ID:", currentUserId);
-  console.log(localStorage);
+  const currentUserId = parseInt(localStorage.getItem("userId"));
 
-  // Ako korisnik nije prijavljen
   useEffect(() => {
-    if (!token) {
-      navigate("/");
-    }
+    if (!token) navigate("/");
   }, [navigate, token]);
 
-  // Učitavanje svih chatova
   useEffect(() => {
     if (!token) return;
-
     fetch("http://localhost:8000/api/chats", {
-      method: "GET",
       headers: {
         Authorization: `Bearer ${token}`,
         Accept: "application/json",
@@ -37,31 +30,63 @@ export default function ChatPage() {
       .then((data) => {
         setChats(data);
         setSelectedChat(data[0] || null);
-      })
-      .catch((error) => {
-        console.error("Greška pri dohvatanju chatova:", error);
       });
   }, [token]);
 
-  // Učitavanje poruka za selektovani chat
   useEffect(() => {
     if (!selectedChat || !token) return;
-
     fetch(`http://localhost:8000/api/conversations/${selectedChat.id}/messages`, {
-      method: "GET",
       headers: {
         Authorization: `Bearer ${token}`,
         Accept: "application/json",
       },
     })
       .then((res) => res.json())
-      .then((data) => {
-        setMessages(data);
-      })
-      .catch((err) => {
-        console.error("Greška pri učitavanju poruka:", err);
-      });
+      .then((data) => setMessages(data));
   }, [selectedChat, token]);
+
+  const handleSend = async () => {
+    if (!newMessage.trim()) return;
+
+  try {
+    const response = await fetch(`http://localhost:8000/api/conversations/${selectedChat.id}/messages`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+        Accept: "application/json"
+      },
+      body: JSON.stringify({
+        content: newMessage,
+        user_id: currentUserId
+      })
+    });
+
+    const result = await response.json();
+
+    if (response.ok) {
+      // Ako API ne vrati user_id — mi ga dodeljujemo
+      if (!result.user_id) {
+        result.user_id = currentUserId;
+      }
+
+      // Ako ne postoji msg.user, možemo i user.email da dodelimo ako želiš
+      if (!result.user) {
+        result.user = {
+          id: currentUserId,
+          email: localStorage.getItem("email"),
+        };
+      }
+
+      setMessages((prev) => [...prev, result]);
+      setNewMessage("");
+    } else {
+      console.error("Backend greška:", result);
+    }
+  } catch (error) {
+    console.error("Greška u slanju poruke:", error);
+  }
+  };
 
   const filteredChats = chats.filter((chat) =>
     chat.title.toLowerCase().includes(search.toLowerCase())
@@ -69,7 +94,6 @@ export default function ChatPage() {
 
   return (
     <div className="chat-container">
-      {/* Leva kolona */}
       <div className="chat-sidebar">
         <input
           type="text"
@@ -96,7 +120,6 @@ export default function ChatPage() {
         </div>
       </div>
 
-      {/* Desna kolona */}
       <div className="chat-main">
         {selectedChat ? (
           <>
@@ -108,11 +131,35 @@ export default function ChatPage() {
               {messages.map((msg) => (
                 <div
                   key={msg.id}
-                  className={`chat-message ${
-                    msg.user_id === currentUserId ? "me" : "them"
-                  }`}
+                  className={`chat-message ${msg.user_id === currentUserId ? "me" : "them"}`}
                 >
+                  {selectedChat.is_group && msg.user && (
+                    <div className="chat-sender">{msg.user.name || msg.user.email}</div>
+                  )}
+
                   <span>{msg.content}</span>
+
+                  {msg.attachments && msg.attachments.map((att) => (
+                    <div key={att.id} className="chat-attachment">
+                      {att.file_type.startsWith("image/") ? (
+                        <img
+                          src={`http://localhost:8000/storage/${att.file_path}`}
+                          alt="slika"
+                          className="chat-image"
+                        />
+                      ) : (
+                        <a
+                          href={`http://localhost:8000/storage/${att.file_path}`}
+                          target="_blank"
+                          rel="noreferrer"
+                          className="chat-file"
+                        >
+                          📎 {att.file_path.split("/").pop()}
+                        </a>
+                      )}
+                    </div>
+                  ))}
+
                   <div className="chat-time">
                     {new Date(msg.created_at).toLocaleTimeString([], {
                       hour: "2-digit",
@@ -121,6 +168,24 @@ export default function ChatPage() {
                   </div>
                 </div>
               ))}
+            </div>
+
+            <div className="chat-input">
+              <input
+                type="text"
+                placeholder="Ukucaj poruku..."
+                value={newMessage}
+                onChange={(e) => setNewMessage(e.target.value)}
+              />
+
+              <input
+                type="file"
+                multiple
+                onChange={(e) => setAttachments(Array.from(e.target.files))}
+                style={{ color: "white" }}
+              />
+
+              <button onClick={handleSend}>Pošalji</button>
             </div>
           </>
         ) : (
