@@ -79,6 +79,7 @@
   position: relative;
   word-wrap: break-word;
   display: inline-block;
+  transition: background-color 0.3s ease; /* Dodajemo transition za smooth efekat */
 }
 
 .chat-message.them {
@@ -163,4 +164,107 @@
   color: #aee1dc;
   text-decoration: none;
   font-size: 14px;
+}
+
+.delete-message-btn {
+  position: absolute;
+  top: 10px;
+  left: -35px; /* Dugme se pomera levo od poruke */
+  background-color: #ff4d4d;
+  color: white;
+  border: none;
+  padding: 5px;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 14px;
+  display: none; /* Dugme je skriveno dok se ne klikne na poruku */
+}
+
+.chat-message.selected .delete-message-btn {
+  display: block; /* Dugme postaje vidljivo kad se pređe mišem preko poruke */
+}
+
+.chat-time {
+  font-size: 12px;
+  color: #ccc;
+  margin-top: 5px;
+  text-align: right;
+}
+
+.report-btn {
+  background-color: #f44336;
+  color: white;
+  border: none;
+  padding: 5px 10px;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 12px;
+  position: absolute;
+  top: 50%;
+  left: -40px; /* Pomeranje dugmeta levo */
+  transform: translateY(-50%);
+  display: none; /* Skriveno dok se poruka ne klikne */
+}
+
+.chat-message.selected .report-btn {
+  display: block; /* Prikazivanje dugmeta kada je poruka selektovana */
+}
+
+/* Modal za prijavu poruke */
+.report-modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: none;
+  justify-content: center;
+  align-items: center;
+}
+
+.report-modal.active {
+  display: flex;
+}
+
+.report-modal-content {
+  background-color: #fff;
+  padding: 20px;
+  border-radius: 10px;
+  width: 300px;
+  text-align: center;
+}
+
+.report-modal select {
+  width: 100%;
+  padding: 10px;
+  margin-bottom: 10px;
+  border-radius: 5px;
+  border: 1px solid #ccc;
+}
+
+.report-modal button {
+  padding: 10px 20px;
+  background-color: #4caf50;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  width: 100%;
+}
+
+.report-modal button:hover {
+  background-color: #45a049;
+}
+
+.report-modal .close-btn {
+  padding: 5px 10px;
+  background-color: #aaa;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  position: absolute;
+  top: 10px;
+  right: 10px;
 }

@@ -2,29 +2,32 @@
 
 namespace App\Events;
 
-use Illuminate\Broadcasting\Channel;
-use Illuminate\Broadcasting\InteractsWithSockets;
-use Illuminate\Broadcasting\PresenceChannel;
+use App\Models\Message;
 use Illuminate\Broadcasting\PrivateChannel;
-use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
-use Illuminate\Foundation\Events\Dispatchable;
+use Illuminate\Contracts\Broadcasting\ShouldBroadcastNow;
 use Illuminate\Queue\SerializesModels;
 
-class MessageSent
+class MessageSent implements ShouldBroadcastNow
 {
-    use Dispatchable, InteractsWithSockets, SerializesModels;
+    use SerializesModels;
 
     public $message;
 
-    public function __construct(Message $message) {
-        $this->message = $message;
+    public function __construct(Message $message)
+    {
+        // Učitaj korisnika i priloge uz poruku
+        $this->message = $message->load('user', 'attachments');
     }
 
-    public function broadcastOn() {
-        return ['chat-channel'];
+    public function broadcastOn()
+    {
+        // Emitujemo poruku na privatni kanal za određenu konverzaciju
+        return new PrivateChannel('chat.' . $this->message->conversation_id);
     }
 
-    public function broadcastAs() {
-        return 'message.sent';
+    public function broadcastAs()
+    {
+        // Ime eventa koje se sluša na frontendu
+        return 'MessageSent';
     }
 }

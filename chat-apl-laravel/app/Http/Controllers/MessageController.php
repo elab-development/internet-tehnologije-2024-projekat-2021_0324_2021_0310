@@ -21,35 +21,33 @@ class MessageController extends Controller
     }
 
     public function store(Request $request, Conversation $conversation) {
-        /*$message = $conversation->messages()->create($request->all());
-
-        
-        //Broadcast::event(new \App\Events\MessageSent($message));
-        return response()->json($message->load('user'), 201);
-       // return response()->json($message, 201);*/
-       $request->validate([
-        'user_id' => 'required|exists:users,id',
-        'content' => 'nullable|string',
-        'attachments.*' => 'file|max:2048',
-    ]);
-
-    $message = $conversation->messages()->create([
-        'user_id' => $request->user_id,
-        'content' => $request->content ?? '',
-    ]);
-
-    if ($request->hasFile('attachments')) {
-        foreach ($request->file('attachments') as $file) {
-            $path = $file->store('attachments', 'public');
-            $message->attachments()->create([
-                'file_path' => $path,
-                'file_type' => $file->getClientMimeType(),
-            ]);
+        $request->validate([
+            'user_id' => 'required|exists:users,id',
+            'content' => 'nullable|string',
+            'attachments.*' => 'file|max:2048',
+        ]);
+    
+        $message = $conversation->messages()->create([
+            'user_id' => $request->user_id,
+            'content' => $request->content ?? '',
+        ]);
+    
+        if ($request->hasFile('attachments')) {
+            foreach ($request->file('attachments') as $file) {
+                $path = $file->store('attachments', 'public');
+                $message->attachments()->create([
+                    'file_path' => $path,
+                    'file_type' => $file->getClientMimeType(),
+                ]);
+            }
         }
+    
+        // Emituj poruku SVIMA uključujući pošiljaoca
+        event(new \App\Events\MessageSent($message));
+    
+        return response()->json($message->load('attachments', 'user'), 201);
     }
-
-    return response()->json($message->load(['attachments', 'user']), 201);
-    }
+    
 
     /*public function update(Request $request, Message $message) {
         $message->update($request->all());

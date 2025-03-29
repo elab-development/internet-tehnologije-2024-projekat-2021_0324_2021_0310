@@ -22,6 +22,9 @@ Route::post('/forgot-password', [AuthController::class, 'forgotPassword']);
 Route::post('/reset-password', [AuthController::class, 'resetPassword']);
 Route::get('/captcha', [AuthController::class, 'getCaptcha']);
 
+Broadcast::routes(['middleware' => ['auth:sanctum']]);
+
+
 Route::middleware('auth:sanctum')->group(function () {
     Route::post('/logout', [AuthController::class, 'logout']);
     // Resursna ruta za poruke
@@ -54,6 +57,8 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('/report-user/{user}', [ReportController::class, 'reportUser']);
     Route::get('/report-reasons', [ReportController::class, 'getReportReasons']);
 
+    Route::post('/messages/{message}/report', [ReportController::class, 'reportMessage']);
+
     // Upload i preuzimanje dokumenata
     Route::post('/messages/{message}/attachments', [MessageAttachmentController::class, 'store']);
     Route::get('/attachments/{id}/download', [MessageAttachmentController::class, 'download']);
@@ -69,6 +74,9 @@ Route::middleware('auth:sanctum')->group(function () {
 
      Route::middleware('auth:sanctum')->get('/chats', [ChatController::class, 'index']);
 });
+Route::options('/{any}', function () {
+    return response()->json([], 200);
+})->where('any', '.*');
 
 
 
