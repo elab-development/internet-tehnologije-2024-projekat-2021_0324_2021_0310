@@ -15,21 +15,25 @@ class AuthController extends Controller
             'name' => 'required|string|max:255',
             'email' => 'required|string|email|unique:users',
             'password' => 'required|string|min:8',
+            'role' => 'required|in:user,moderator,admin' // dodata validacija
         ]);
-
+    
         $user = User::create([
             'name' => $request->name,
             'email' => $request->email,
             'password' => Hash::make($request->password),
-            'role' => 'user' //dodato zbog uloga,podrazumeva se da je user obican
+            'role' => $request->role
         ]);
+    
         $token = $user->createToken('auth_token')->plainTextToken;
+    
         return response()->json([
             'message' => 'Korisnik uspešno registrovan!',
             'user' => $user,
-            'token' => $token,
-        ], 201);
+            'token' => $token
+        ]);
     }
+    
 
     public function login(Request $request)
 {

@@ -113,3 +113,83 @@
   border-color: #1a73e8;
   outline: none;
 }
+
+.admin-container {
+  min-height: 100vh;
+  background: linear-gradient(to bottom right, #cfe9ff, #ccffcc);
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+  justify-content: center;
+  padding: 20px;
+  font-family: 'Segoe UI', sans-serif;
+  gap: 30px; /* razmak između boxova */
+}
+
+.admin-box {
+  background-color: #fff;
+  border-radius: 12px;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08);
+  padding: 40px;
+  max-width: 800px;
+  width: 100%;
+}
+
+.admin-title {
+  font-size: 28px;
+  font-weight: bold;
+  color: #1d4ed8;
+  text-align: center;
+  margin-bottom: 10px;
+}
+
+.admin-subtitle {
+  text-align: center;
+  color: #374151;
+  font-size: 18px;
+  margin-bottom: 30px;
+}
+
+.chart-wrapper {
+  width: 100%;
+}
+
+.error-text {
+  color: #dc2626;
+  font-weight: 500;
+}
+
+.loading-text {
+  font-size: 18px;
+  color: #555;
+}
+.users-box {
+  margin-top: 40px;
+}
+
+.table-wrapper {
+  overflow-x: auto;
+}
+
+.user-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 15px;
+}
+
+.user-table th,
+.user-table td {
+  padding: 12px 16px;
+  border-bottom: 1px solid #e5e7eb;
+  text-align: left;
+}
+
+.user-table th {
+  background-color: #f1f5f9;
+  color: #1f2937;
+  font-weight: 600;
+}
+
+.user-table tr:hover {
+  background-color: #f9fafb;
+}

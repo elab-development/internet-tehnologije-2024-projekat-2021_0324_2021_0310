@@ -29,7 +29,7 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('/logout', [AuthController::class, 'logout']);
     // Resursna ruta za poruke
     Route::apiResource('messages', MessageController::class)->middleware('own-data');
-    
+
     // API rute za chat aplikaciju
     Route::get('/conversations', [ConversationController::class, 'index']);
     Route::post('/conversations', [ConversationController::class, 'store']);
@@ -38,17 +38,25 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::delete('/conversations/{conversation}', [ConversationController::class, 'destroy']);
     Route::put('/messages/{message}', [MessageController::class, 'update']);
     Route::delete('/messages/{message}', [MessageController::class, 'destroy']);
-    
+
     Route::post('/messages/{message}/attachments', [MessageAttachmentController::class, 'store']);
     // ADMIN rute
+    Route::middleware(['auth:sanctum'])->get('/admin/users', [AdminController::class, 'listUsers']);
     Route::middleware('role:admin')->group(function () {
-        Route::get('/admin/stats', [AdminController::class, 'stats']);
-        Route::get('/admin/users', [AdminController::class, 'listUsers']);
+        Route::get('/admin', function (\Illuminate\Http\Request $request) {
+            if ($request->user()->role !== 'admin') {
+                return response()->json(['message' => 'Unauthorized'], 403);
+            }
+
+            return response()->json(['message' => 'Welcome Admin!']);
+        });
+        Route::middleware('auth:sanctum')->get('/admin', [AdminController::class, 'checkRole']);
         Route::delete('/admin/users/{user}', [AdminController::class, 'deleteUser']);
     });
 
     // MODERATOR rute
     Route::middleware('role:moderator')->group(function () {
+        Route::middleware('auth:sanctum')->get('/moderator', [ModeratorController::class, 'checkRole']);
         Route::get('/moderator/reported-messages', [ModeratorController::class, 'reportedMessages']);
         Route::post('/moderator/suspend-user/{user}', [ModeratorController::class, 'suspendUser']);
     });
@@ -66,21 +74,20 @@ Route::middleware('auth:sanctum')->group(function () {
     // Slanje poruka sa prilozima
     Route::post('/messages/send-with-attachments', [MessageController::class, 'sendMessageWithAttachment']);
 
-    
-     // Pretraga po kriterijumima
-     Route::get('/search/users', [UserController::class, 'searchUsers']);
-     Route::get('/search/messages', [MessageController::class, 'searchMessages']);
-     Route::get('/search/conversations', [ConversationController::class, 'searchConversations']);
 
-     Route::middleware('auth:sanctum')->get('/chats', [ChatController::class, 'index']);
+    // Pretraga po kriterijumima
+    Route::get('/search/users', [UserController::class, 'searchUsers']);
+    Route::get('/search/messages', [MessageController::class, 'searchMessages']);
+    Route::get('/search/conversations', [ConversationController::class, 'searchConversations']);
+
+    Route::middleware('auth:sanctum')->get('/chats', [ChatController::class, 'index']);
 });
 Route::options('/{any}', function () {
     return response()->json([], 200);
 })->where('any', '.*');
 
 
-
-
+Route::get('/users/count', [UserController::class, 'countUsers']);
 
 
 

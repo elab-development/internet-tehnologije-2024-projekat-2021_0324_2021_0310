@@ -14,7 +14,7 @@ export default function LoginPage() {
       setError("Popunite sva polja.");
       return;
     }
-
+  
     try {
       const response = await fetch("http://localhost:8000/api/login", {
         method: "POST",
@@ -24,28 +24,36 @@ export default function LoginPage() {
         },
         body: JSON.stringify({ email, password }),
       });
-
+  
       const data = await response.json();
-      console.log(data);
       if (response.ok) {
         setSuccessMessage("Uspešno ste ulogovani!");
         setError("");
-
-        //opcionalno: sačuvaj token ako backend šalje
+  
         localStorage.setItem("token", data.token);
         localStorage.setItem("email", data.user.email);
         localStorage.setItem("userId", data.user.id);
+        localStorage.setItem("role", data.user.role);
 
         setTimeout(() => {
-          navigate("/chat");
-        }, 1500);
+          if (data.user.role === "admin") {
+            navigate("/admin");
+          } else if (data.user.role === "moderator") {
+            navigate("/moderator");
+          } else {
+            navigate("/chat");
+          }
+        }, 1000);
       } else {
-        setError(data.message || "Neuspešna prijava.");
+        setError(data.message || "Došlo je do greške.");
       }
     } catch (error) {
-      setError("Greška pri povezivanju sa serverom.");
+      setError("Greška prilikom povezivanja sa serverom.");
     }
   };
+  
+  
+  
 
   return (
     <div className="login-container">

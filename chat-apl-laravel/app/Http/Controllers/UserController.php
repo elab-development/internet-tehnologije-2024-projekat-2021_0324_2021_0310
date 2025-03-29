@@ -8,7 +8,12 @@ use Illuminate\Http\Request;
 
 class UserController extends Controller
 {
- 
+    public function countUsers()
+{
+    $count = \App\Models\User::count();
+    return response()->json(['count' => $count]);
+}
+
     public function index(): JsonResponse
     {
         return response()->json(['users' => User::all()]);
