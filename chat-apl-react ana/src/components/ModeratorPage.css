@@ -1,0 +1,101 @@
+/* Pozadina - top efekat */
+body {
+  margin: 0;
+  min-height: 100vh;
+  background: linear-gradient(135deg, #cfe9ff, #ccffcc);
+  background-attachment: fixed;
+  background-repeat: no-repeat;
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+}
+
+/* Glavni kontejner */
+.moderator-container {
+  max-width: 1200px;
+  margin: 40px auto;
+  background: rgba(255, 255, 255, 0.95);
+  padding: 30px;
+  border-radius: 16px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+}
+
+/* Naslov */
+.moderator-container h2 {
+  text-align: center;
+  color: #1d4ed8;
+  font-size: 2.2rem;
+  margin-bottom: 30px;
+}
+
+/* Filter dropdown */
+.moderator-container select {
+  padding: 10px 16px;
+  border-radius: 8px;
+  border: 2px solid #1d4ed8;
+  font-size: 1rem;
+  outline: none;
+  margin-left: 10px;
+  background: white;
+  transition: border-color 0.3s;
+}
+
+.moderator-container select:hover {
+  border-color: #2563eb;
+}
+
+/* Tabela */
+.moderator-table {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0;
+  margin-top: 20px;
+  border: 1px solid #ddd;
+  border-radius: 12px;
+  overflow: hidden;
+}
+
+.moderator-table thead {
+  background-color: hsl(209, 58%, 69%); /* svetlo plava */
+  color: #434b62;
+}
+
+.moderator-table th,
+.moderator-table td {
+  padding: 14px 18px;
+  text-align: left;
+  border-bottom: 1px solid #ccc;
+}
+
+.moderator-table tbody tr:hover {
+  background-color: #f0f9ff;
+}
+
+/* Dugmad */
+.suspend-btn,
+.resolve-btn {
+  padding: 8px 14px;
+  border: none;
+  border-radius: 6px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background 0.3s;
+  font-size: 0.95rem;
+}
+
+.suspend-btn {
+  background-color: #ef4444;
+  color: white;
+  margin-right: 6px;
+}
+
+.suspend-btn:hover {
+  background-color: #dc2626;
+}
+
+.resolve-btn {
+  background-color: #10b981;
+  color: white;
+}
+
+.resolve-btn:hover {
+  background-color: #059669;
+}

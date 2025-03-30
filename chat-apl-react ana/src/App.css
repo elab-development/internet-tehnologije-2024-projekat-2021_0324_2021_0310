@@ -1,0 +1,374 @@
+.login-container {
+  min-height: 100vh;
+  background: linear-gradient(to bottom right, #cfe9ff, #ccffcc);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 20px;
+}
+
+.logo-top-right {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  z-index: 100;
+}
+
+.logo-top-right img {
+  width: 60px; /* prilagodi veličinu po želji */
+  height: auto;
+}
+
+.login-card {
+  background-color: white;
+  padding: 40px;
+  border-radius: 24px;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+  width: 100%;
+  max-width: 440px; /* povećano sa 400px */
+}
+
+.login-title {
+  text-align: center;
+  margin-bottom: 25px;
+  color: #222;
+  font-size: 28px;
+}
+
+.form-group {
+  margin-bottom: 20px;
+  display: flex;
+  flex-direction: column;
+}
+.login-spajanje {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+.app-naslov{
+  font-size: 64px;
+  font-weight: 1500;
+  font-family: 'Segoe UI', sans-serif;
+  margin-bottom: 50px;
+  margin-top: -100px; 
+  text-align: center;
+
+  background: linear-gradient(to right, #38b2ac, #3b82f6);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+.app-podnaslov{
+  font-size: 32px;
+  font-weight: 900;
+  font-family: 'Segoe UI', sans-serif;
+  margin-bottom: 50px;
+  margin-top: -40px; 
+  text-align: center;
+
+  background: linear-gradient(to right, #38b2ac, #3b82f6);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+.form-group label {
+  margin-bottom: 6px;
+  color: #444;
+  font-size: 1rem;
+}
+
+.form-group input {
+  padding: 14px;
+  border: 1px solid #bbb;
+  border-radius: 10px;
+  font-size: 1rem;
+}
+
+.links {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 12px;
+}
+
+.link-btn {
+  background: none;
+  border: none;
+  color: #1a73e8;
+  cursor: pointer;
+  font-size: 0.95rem;
+  padding: 0;
+}
+
+.link-btn:hover {
+  text-decoration: underline;
+}
+
+.login-btn {
+  margin-top: 25px;
+  width: 100%;
+  background-color: #1a73e8;
+  color: white;
+  border: none;
+  padding: 14px;
+  border-radius: 12px;
+  font-size: 1.05rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.login-btn:hover {
+  background-color: #155ab6;
+}
+
+.back-link {
+  display: block;
+  margin-top: 15px;
+  text-align: right;
+  color: #1a73e8;
+  font-size: 0.95rem;
+  text-decoration: none;
+}
+
+.back-link:hover {
+  text-decoration: underline;
+}
+
+.form-group select {
+  padding: 14px;
+  border: 1px solid #bbb;
+  border-radius: 10px;
+  font-size: 1rem;
+  background-color: white;
+  background-image: url("data:image/svg+xml;utf8,<svg fill='%23444' height='24' viewBox='0 0 24 24' width='24' xmlns='http://www.w3.org/2000/svg'><path d='M7 10l5 5 5-5z'/></svg>");
+  background-repeat: no-repeat;
+  background-position: right 12px center;
+  background-size: 16px;
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  cursor: pointer;
+  transition: border-color 0.2s;
+}
+
+.form-group select:focus {
+  border-color: #1a73e8;
+  outline: none;
+}
+
+.admin-container {
+  min-height: 100vh;
+  background: linear-gradient(to bottom right, #cfe9ff, #ccffcc);
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+  justify-content: center;
+  padding: 20px;
+  font-family: 'Segoe UI', sans-serif;
+  gap: 30px; /* razmak između boxova */
+}
+
+.admin-box {
+  background-color: #fff;
+  border-radius: 12px;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08);
+  padding: 40px;
+  max-width: 800px;
+  width: 100%;
+}
+
+.admin-title {
+  font-size: 28px;
+  font-weight: bold;
+  color: #1d4ed8;
+  text-align: center;
+  margin-bottom: 10px;
+}
+
+.admin-subtitle {
+  text-align: center;
+  color: #374151;
+  font-size: 18px;
+  margin-bottom: 30px;
+}
+
+.chart-wrapper {
+  width: 100%;
+}
+
+.error-text {
+  color: #dc2626;
+  font-weight: 500;
+}
+
+.loading-text {
+  font-size: 18px;
+  color: #555;
+}
+.users-box {
+  margin-top: 40px;
+}
+
+.table-wrapper {
+  overflow-x: auto;
+}
+
+.user-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 15px;
+}
+
+.user-table th,
+.user-table td {
+  padding: 12px 16px;
+  border-bottom: 1px solid #e5e7eb;
+  text-align: left;
+}
+
+.user-table th {
+  background-color: #f1f5f9;
+  color: #1f2937;
+  font-weight: 600;
+}
+
+.user-table tr:hover {
+  background-color: #f9fafb;
+}
+
+.moderator-container {
+  padding: 20px;
+}
+
+.moderator-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.moderator-table th,
+.moderator-table td {
+  padding: 10px;
+  border: 1px solid #ccc;
+}
+
+.moderator-table th {
+  background-color: #f2f2f2;
+}
+
+button {
+  padding: 6px 10px;
+  background-color: #ff4747;
+  color: white;
+  border: none;
+  cursor: pointer;
+}
+
+button:hover {
+  background-color: #d63b3b;
+}
+.admin-box {
+  background-color: #f9fafb;
+  padding: 20px;
+  border-radius: 12px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  margin-bottom: 20px;
+  text-align: center;
+}
+
+.admin-box h3 {
+  margin: 0;
+  font-size: 20px;
+  color: #2563eb;
+}
+
+.admin-box p {
+  font-size: 28px;
+  font-weight: bold;
+  margin-top: 10px;
+}
+
+
+.new-chat-btn:hover {
+  background-color: #1d4ed8;
+}
+
+/* Modal overlay */
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 50;
+}
+
+/* Modal content box */
+.modal-content {
+  background-color: #1e293b;
+  padding: 30px;
+  border-radius: 12px;
+  width: 400px;
+  max-width: 90%;
+  color: white;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+  text-align: center;
+}
+
+/* Dugmad unutar modala */
+.modal-content button {
+  margin: 10px 5px;
+  padding: 10px 20px;
+  background-color: #2563eb;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: bold;
+}
+
+.modal-content button:hover {
+  background-color: #1e40af;
+}
+
+/* Lista korisnika */
+.user-select-list {
+  list-style: none;
+  padding: 0;
+  margin: 15px 0;
+  max-height: 200px;
+  overflow-y: auto;
+  text-align: left;
+}
+
+.user-select-list li {
+  padding: 10px;
+  border-bottom: 1px solid #334155;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.user-select-list li:hover {
+  background-color: #334155;
+}
+
+.user-select-list li.selected {
+  background-color: #2563eb;
+  color: white;
+}
+
+/* Zatvori dugme */
+.close-btn {
+  background: transparent;
+  color: white;
+  border: 1px solid #ccc;
+  padding: 8px 16px;
+  margin-top: 20px;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+.close-btn:hover {
+  background-color: #334155;
+}
