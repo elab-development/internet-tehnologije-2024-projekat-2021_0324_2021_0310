@@ -46,8 +46,16 @@ export default function ForgotPasswordPage() {
 
   return (
     <div className="login-container">
+
+       <div className="logo-top-right">
+  <img src="/logo.png" alt="Logo" />
+</div>
+      <div className="login-spajanje">
+      
+          <h1 className="app-naslov">ChitChat</h1>
+            <h2 className="app-podnaslov">-Zaboravljena lozinka-</h2>
       <div className="login-card">
-        <h2 className="login-title">Zaboravljena lozinka</h2>
+       
 
         <div className="form-group">
           <label>Email</label>
@@ -75,6 +83,7 @@ export default function ForgotPasswordPage() {
         <button className="login-btn" onClick={handleSubmit}>Nastavi</button>
         <Link to="/" className="back-link">Nazad na login</Link>
       </div>
+    </div>
     </div>
   );
 }

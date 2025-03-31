@@ -51,8 +51,15 @@ export default function RegisterPage() {
 
   return (
     <div className="login-container">
+       <div className="logo-top-right">
+  <img src="/logo.png" alt="Logo" />
+</div>
+      <div className="login-spajanje">
+      
+          <h1 className="app-naslov">ChitChat</h1>
+            <h2 className="app-podnaslov">-Register-</h2>
       <div className="login-card">
-        <h2 className="login-title">Registracija</h2>
+        
 
         {successMessage && (
           <p style={{ color: "green", textAlign: "center" }}>{successMessage}</p>
@@ -108,6 +115,7 @@ export default function RegisterPage() {
           Nazad na login
         </Link>
       </div>
+    </div>
     </div>
   );
 }
