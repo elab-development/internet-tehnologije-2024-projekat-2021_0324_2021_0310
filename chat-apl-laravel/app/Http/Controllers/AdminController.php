@@ -55,4 +55,21 @@ class AdminController extends Controller
 
     return response()->json(['is_admin' => false], 403);
 }
+
+public function updateRole(Request $request, $id)
+{
+    $request->validate([
+        'role' => 'required|in:user,moderator,admin',
+    ]);
+
+    $user = User::findOrFail($id);
+    $user->role = $request->role;
+    $user->save();
+
+    return response()->json([
+        'message' => 'Uloga uspešno promenjena.',
+        'user' => $user,
+    ]);
+}
+
 }

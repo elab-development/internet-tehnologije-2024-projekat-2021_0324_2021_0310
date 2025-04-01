@@ -65,6 +65,34 @@ export default function AdminPage() {
     }
   };
 
+  const handleRoleChange = async (userId, newRole) => {
+    const token = localStorage.getItem("token");
+  
+    try {
+      const response = await fetch(`http://localhost:8000/api/admin/users/${userId}/role`, {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+          Accept: "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify({ role: newRole }),
+      });
+  
+      const data = await response.json();
+  
+      if (response.ok) {
+        alert("Uloga uspešno promenjena.");
+        fetchAllUsers(); // ponovo učitaj korisnike
+      } else {
+        alert(data.message || "Greška pri ažuriranju uloge.");
+      }
+    } catch (err) {
+      console.error(err);
+      alert("Greška pri slanju zahteva.");
+    }
+  };
+  
   const fetchAllUsers = async () => {
     try {
       const token = localStorage.getItem("token");
@@ -164,7 +192,17 @@ export default function AdminPage() {
                   <td>{user.id}</td>
                   <td>{user.name || "-"}</td>
                   <td>{user.email}</td>
-                  <td>{user.role || "korisnik"}</td>
+                  <td>
+  <select
+  className="role-select"
+    value={user.role}
+    onChange={(e) => handleRoleChange(user.id, e.target.value)}
+  >
+    <option value="user">Korisnik</option>
+    <option value="moderator">Moderator</option>
+    <option value="admin">Administrator</option>
+  </select>
+</td>
                   <td>{new Date(user.created_at).toLocaleString()}</td>
                 </tr>
               ))}

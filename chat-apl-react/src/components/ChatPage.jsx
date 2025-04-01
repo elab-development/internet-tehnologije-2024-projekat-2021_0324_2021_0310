@@ -7,18 +7,7 @@ import "./ChatPage.css";
 
 window.Pusher = Pusher;
 
-const echo = new Echo({
-  broadcaster: "pusher",
-  key: "44d0e910d2a6d3e2396b",
-  cluster: "eu",
-  forceTLS: true,
-  authEndpoint: "http://localhost:8000/broadcasting/auth",
-  auth: {
-    headers: {
-      Authorization: `Bearer ${localStorage.getItem("token")}`,
-    },
-  },
-});
+
 
 export default function ChatPage() {
   const [chats, setChats] = useState([]);
@@ -47,17 +36,33 @@ export default function ChatPage() {
     if (!token) navigate("/");
   }, [navigate, token]);
 
+  const echo = new Echo({
+    broadcaster: "pusher",
+    key: "44d0e910d2a6d3e2396b",
+    cluster: "eu",
+    forceTLS: true,
+    authEndpoint: "http://localhost:8000/broadcasting/auth",
+    auth: {
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem("token")}`,
+      },
+    },
+  });
+
   const handleDownload = (filePath, fileName) => {
     const confirmed = window.confirm(`Da li želite da preuzmete fajl: ${fileName}?`);
     if (confirmed) {
+      const fileOnly = filePath.split("/").pop();
+      const downloadUrl = `http://localhost:8000/download/${fileOnly}`;
       const link = document.createElement("a");
-      link.href = `http://localhost:8000/storage/${filePath}`;
-      link.download = fileName;
+      link.href = downloadUrl;
+      link.setAttribute("download", fileName);
       document.body.appendChild(link);
       link.click();
       document.body.removeChild(link);
     }
   };
+  
   useEffect(() => {
     if (!token) return;
 
@@ -169,29 +174,35 @@ export default function ChatPage() {
       alert("Vaš nalog je trenutno suspendovan. Ne možete slati poruke.");
       return;
     }
-
+  
     if (!newMessage.trim() && attachments.length === 0) return;
-
+  
     const formData = new FormData();
     formData.append("user_id", currentUserId);
     formData.append("content", newMessage);
-    attachments.forEach((file, idx) => {
-      formData.append(`attachments[${idx}]`, file);
+  
+    attachments.forEach((file) => {
+      formData.append("attachments[]", file);
     });
-
+  
     const res = await fetch(`http://localhost:8000/api/conversations/${selectedChat.id}/messages`, {
       method: "POST",
       headers: {
         Authorization: `Bearer ${token}`,
+        Accept: "application/json",
       },
       body: formData,
     });
-
+  
     if (res.ok) {
       setNewMessage("");
       setAttachments([]);
+    } else {
+      const errorData = await res.json();
+      console.error("Greška:", errorData);
     }
   };
+  
 
   const handleLogout = async () => {
     if (!window.confirm("Da li ste sigurni da želite da se odjavite?")) return;
@@ -375,36 +386,38 @@ export default function ChatPage() {
                 >
                   <span>{msg.content}</span>
                   {msg.attachments && msg.attachments.length > 0 && (
-                    <div className="chat-attachments">
-                      {msg.attachments.map((att) => {
-                        const fileName = att.file_path.split("/").pop();
-                        const isImage = att.file_type && att.file_type.startsWith("image/");
+  <div className="chat-attachments">
+    {msg.attachments.map((att) => {
+      const fileName = att.original_name || att.file_path.split("/").pop();
+      const fileUrl = `http://localhost:8000/storage/${att.file_path}`;
+      const isImage = att.file_type?.startsWith("image/");
 
-                        return (
-                          <div key={att.id} className="attachment-bubble">
-                            {isImage ? (
-                              <img
-                                src={`http://localhost:8000/storage/${att.file_path}`}
-                                alt={fileName}
-                                className="chat-image"
-                              />
-                            ) : (
-                              <div className="attachment-file">
-                                <span className="attachment-icon">📎</span>
-                                <span className="attachment-name">{fileName}</span>
-                                <button
-                                  className="download-btn"
-                                  onClick={() => handleDownload(att.file_path, fileName)}
-                                >
-                                  <Download size={16} />
-                                </button>
-                              </div>
-                            )}
-                          </div>
-                        );
-                      })}
-                    </div>
-                  )}
+      return (
+        <div key={att.id} className="attachment-bubble">
+          {isImage ? (
+            <img
+              src={fileUrl}
+              alt={fileName}
+              className="chat-image"
+            />
+          ) : (
+            <div className="attachment-file flex items-center gap-2 bg-gray-800 p-2 rounded-lg text-white mt-1">
+              <span className="attachment-icon">📎</span>
+              <span className="attachment-name">{fileName}</span>
+              <button
+  onClick={() => handleDownload(att.file_path, fileName)}
+  className="ml-auto text-blue-400 hover:underline bg-transparent border-none cursor-pointer flex items-center"
+>
+  <Download size={16} />
+</button>
+
+            </div>
+          )}
+        </div>
+      );
+    })}
+  </div>
+)}
                   {parseInt(msg.user_id) === currentUserId && selectedMessageId === msg.id && (
                     <button className="delete-message-btn" onClick={() => handleDeleteMessage(msg.id)}>❌</button>
                   )}
@@ -506,6 +519,7 @@ export default function ChatPage() {
                 </ul>
                 <input
                   type="text"
+                  
                   placeholder="Naziv grupe"
                   value={groupTitle}
                   onChange={(e) => setGroupTitle(e.target.value)}

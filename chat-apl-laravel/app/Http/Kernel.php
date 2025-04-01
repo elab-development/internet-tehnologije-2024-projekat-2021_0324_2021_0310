@@ -36,6 +36,7 @@ class Kernel extends HttpKernel
         'api' => [
             'throttle:60,1', // Ograničava broj API poziva (60 zahteva u 1 minutu)
             \Illuminate\Routing\Middleware\SubstituteBindings::class,
+            \App\Http\Middleware\CorsMiddleware::class,
         ],
     ];
 

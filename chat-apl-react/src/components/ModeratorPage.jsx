@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import "./ModeratorPage.css";
 
 const ModeratorPage = () => {
@@ -26,7 +26,9 @@ const ModeratorPage = () => {
       });
   };
 
-  
+  useEffect(() => {
+    fetchReports();
+  }, []);
 
   const handleSuspend = (userId) => {
     if (!window.confirm("Da li ste sigurni da želite da suspendujete ovog korisnika?")) return;
@@ -103,8 +105,8 @@ const ModeratorPage = () => {
         <label>Filter: </label>
         <select value={filter} onChange={(e) => setFilter(e.target.value)}>
           <option value="all">Sve</option>
-          <option value="unresolved">Neresene</option>
-          <option value="resolved">Resene</option>
+          <option value="unresolved">Nerešene</option>
+          <option value="resolved">Rešene</option>
         </select>
       </div>
 

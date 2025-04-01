@@ -25,6 +25,7 @@ Route::get('/captcha', [AuthController::class, 'getCaptcha']);
 Broadcast::routes(['middleware' => ['auth:sanctum']]);
 
 
+
 Route::middleware('auth:sanctum')->group(function () {
     Route::post('/logout', [AuthController::class, 'logout']);
     // Resursna ruta za poruke
@@ -45,6 +46,8 @@ Route::middleware('auth:sanctum')->group(function () {
 
     Route::get('/users/count', [UserController::class, 'countUsers']);
     // ADMIN rute
+    Route::put('/admin/users/{id}/role', [AdminController::class, 'updateRole']);
+    
     Route::middleware('auth:sanctum')->get('/admin/reports/count', [AdminController::class, 'countReports']);
     Route::middleware('auth:sanctum')->get('/admin/messages/count', [AdminController::class, 'countMessages']);
     Route::middleware(['auth:sanctum'])->get('/admin/users', [AdminController::class, 'listUsers']);
@@ -53,7 +56,6 @@ Route::middleware('auth:sanctum')->group(function () {
             if ($request->user()->role !== 'admin') {
                 return response()->json(['message' => 'Unauthorized'], 403);
             }
-
             return response()->json(['message' => 'Welcome Admin!']);
         });
         Route::middleware('auth:sanctum')->get('/admin', [AdminController::class, 'checkRole']);

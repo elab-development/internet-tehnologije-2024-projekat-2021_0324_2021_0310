@@ -5,7 +5,6 @@ export default function RegisterPage() {
   const [ime, setIme] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [uloga, setUloga] = useState("user");
   const [error, setError] = useState("");
   const [successMessage, setSuccessMessage] = useState("");
 
@@ -28,7 +27,6 @@ export default function RegisterPage() {
           name: ime,
           email,
           password,
-          role: uloga,
         }),
       });
 
@@ -51,71 +49,59 @@ export default function RegisterPage() {
 
   return (
     <div className="login-container">
-       <div className="logo-top-right">
-  <img src="/logo.png" alt="Logo" />
-</div>
-      <div className="login-spajanje">
-      
-          <h1 className="app-naslov">ChitChat</h1>
-            <h2 className="app-podnaslov">-Register-</h2>
-      <div className="login-card">
-        
-
-        {successMessage && (
-          <p style={{ color: "green", textAlign: "center" }}>{successMessage}</p>
-        )}
-        {error && (
-          <p style={{ color: "red", textAlign: "center" }}>{error}</p>
-        )}
-
-        <div className="form-group">
-          <label>Ime</label>
-          <input
-            type="text"
-            placeholder="Unesite ime"
-            value={ime}
-            onChange={(e) => setIme(e.target.value)}
-          />
-        </div>
-
-        <div className="form-group">
-          <label>Email</label>
-          <input
-            type="email"
-            placeholder="Unesite email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-          />
-        </div>
-
-        <div className="form-group">
-          <label>Lozinka</label>
-          <input
-            type="password"
-            placeholder="Unesite lozinku"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-          />
-        </div>
-
-        <div className="form-group">
-          <label>Uloga</label>
-          <select value={uloga} onChange={(e) => setUloga(e.target.value)}>
-            <option value="user">Korisnik</option>
-            <option value="moderator">Moderator</option>
-            <option value="admin">Administrator</option>
-          </select>
-        </div>
-
-        <button className="login-btn" onClick={handleRegister}>
-          Registruj se
-        </button>
-
-        <Link to="/" className="back-link">
-          Nazad na login
-        </Link>
+      <div className="logo-top-right">
+        <img src="/logo.png" alt="Logo" />
       </div>
-    </div>
+      <div className="login-spajanje">
+        <h1 className="app-naslov">ChitChat</h1>
+        <h2 className="app-podnaslov">-Register-</h2>
+        <div className="login-card">
+          {successMessage && (
+            <p style={{ color: "green", textAlign: "center" }}>{successMessage}</p>
+          )}
+          {error && (
+            <p style={{ color: "red", textAlign: "center" }}>{error}</p>
+          )}
+
+          <div className="form-group">
+            <label>Ime</label>
+            <input
+              type="text"
+              placeholder="Unesite ime"
+              value={ime}
+              onChange={(e) => setIme(e.target.value)}
+            />
+          </div>
+
+          <div className="form-group">
+            <label>Email</label>
+            <input
+              type="email"
+              placeholder="Unesite email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+            />
+          </div>
+
+          <div className="form-group">
+            <label>Lozinka</label>
+            <input
+              type="password"
+              placeholder="Unesite lozinku"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+            />
+          </div>
+
+          <button className="login-btn" onClick={handleRegister}>
+            Registruj se
+          </button>
+
+          <Link to="/" className="back-link">
+            Nazad na login
+          </Link>
+        </div>
+      </div>
     </div>
   );
 }

@@ -15,22 +15,25 @@ class MessageController extends Controller
 {
     public function getMessages(Conversation $conversation) {
         $messages = $conversation->messages()
-        ->select('id', 'content', 'user_id', 'created_at') // biramo samo potrebne kolone
-        ->orderBy('created_at')
-        ->get();
+    ->with('attachments')
+    ->select('id', 'content', 'user_id', 'created_at')
+    ->orderBy('created_at')
+    ->get();
 
     return response()->json($messages);
     }
 
-    public function store(Request $request, Conversation $conversation) {
+    public function store(Request $request, Conversation $conversation)
+    {
         $request->validate([
             'user_id' => 'required|exists:users,id',
             'content' => 'nullable|string',
-            'attachments.*' => 'file|max:2048',
+            'attachments.*' => 'file|max:1048576',
         ]);
+    
         $user = $request->user();
         $now = Carbon::now('Europe/Belgrade');
-
+    
         if ($user->suspended_until && Carbon::parse($user->suspended_until)->gt($now)) {
             return response()->json([
                 'message' => 'Vaš nalog je suspendovan do ' . $user->suspended_until,
@@ -44,24 +47,25 @@ class MessageController extends Controller
     
         if ($request->hasFile('attachments')) {
             foreach ($request->file('attachments') as $file) {
-                $path = $file->store('attachments', 'public');
+                $originalName = $file->getClientOriginalName();
+                $mimeType = $file->getClientMimeType();
+                $path = $file->storeAs('attachments', $originalName, 'public');
+    
                 $message->attachments()->create([
                     'file_path' => $path,
-                    'file_type' => $file->getClientMimeType(),
+                    'file_type' => $mimeType,
                 ]);
             }
         }
-        if (auth()->user()->suspended_until && now()->lessThan(auth()->user()->suspended_until)) {
-            return response()->json([
-                'message' => 'Vaš nalog je suspendovan do ' . auth()->user()->suspended_until->format('d.m.Y H:i'),
-            ], 403);
+    
+        // Emituj događaj samo ako korisnik nije suspendovan
+        if (!$user->suspended_until || now()->greaterThan($user->suspended_until)) {
+         //   event(new \App\Events\MessageSent($message));
         }
-        
-        // Emituj poruku SVIMA uključujući pošiljaoca
-        event(new \App\Events\MessageSent($message));
     
         return response()->json($message->load('attachments', 'user'), 201);
     }
+    
     
 
     /*public function update(Request $request, Message $message) {
