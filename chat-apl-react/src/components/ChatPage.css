@@ -304,7 +304,7 @@ body {
   margin: 0;
 }
 .logout-btn {
-  margin-left: 390%;
+  margin-left: 700px;
   background-color: #111827;
   color: white;
   border: none;
@@ -644,4 +644,24 @@ chat-attachments {
   border-radius: 6px;
   margin-top: 4px;
   gap: 10px;
+}
+.group-title-input {
+  padding: 8px 12px;
+  border-radius: 6px;
+  border: 1px solid #4b5563;
+  background-color: #1f2937;
+  color: #f9fafb;
+  font-size: 14px;
+  width: 200px;
+  margin-right: 10px;
+  outline: none;
+  transition: border-color 0.3s;
+}
+
+.group-title-input::placeholder {
+  color: #9ca3af;
+}
+
+.group-title-input:focus {
+  border-color: #3b82f6;
 }

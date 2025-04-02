@@ -4,21 +4,12 @@ import Echo from "laravel-echo";
 import Pusher from "pusher-js";
 import { Paperclip, Download } from "lucide-react";
 import "./ChatPage.css";
+import ChatWindow from "./ChatWindow";
+
 
 window.Pusher = Pusher;
 
-const echo = new Echo({
-  broadcaster: "pusher",
-  key: "44d0e910d2a6d3e2396b",
-  cluster: "eu",
-  forceTLS: true,
-  authEndpoint: "http://localhost:8000/broadcasting/auth",
-  auth: {
-    headers: {
-      Authorization: `Bearer ${localStorage.getItem("token")}`,
-    },
-  },
-});
+
 
 export default function ChatPage() {
   const [chats, setChats] = useState([]);
@@ -38,6 +29,7 @@ export default function ChatPage() {
   const [selectedUsers, setSelectedUsers] = useState([]);
   const [groupTitle, setGroupTitle] = useState("");
   const [isSuspended, setIsSuspended] = useState(false);
+  const [intervalId, setIntervalId] = useState(null);
 
   const navigate = useNavigate();
   const token = localStorage.getItem("token");
@@ -47,17 +39,33 @@ export default function ChatPage() {
     if (!token) navigate("/");
   }, [navigate, token]);
 
+  const echo = new Echo({
+    broadcaster: "pusher",
+    key: "44d0e910d2a6d3e2396b",
+    cluster: "eu",
+    forceTLS: true,
+    authEndpoint: "http://localhost:8000/broadcasting/auth",
+    auth: {
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem("token")}`,
+      },
+    },
+  });
+
   const handleDownload = (filePath, fileName) => {
     const confirmed = window.confirm(`Da li želite da preuzmete fajl: ${fileName}?`);
     if (confirmed) {
+      const fileOnly = filePath.split("/").pop();
+      const downloadUrl = `http://localhost:8000/download/${fileOnly}`;
       const link = document.createElement("a");
-      link.href = `http://localhost:8000/storage/${filePath}`;
-      link.download = fileName;
+      link.href = downloadUrl;
+      link.setAttribute("download", fileName);
       document.body.appendChild(link);
       link.click();
       document.body.removeChild(link);
     }
   };
+  
   useEffect(() => {
     if (!token) return;
 
@@ -88,6 +96,34 @@ export default function ChatPage() {
         setIsSuspended(suspendedUntil && suspendedUntil > now);
       });
   }, [token]);
+ //ucitavanje poruka
+    const fetchMessages = () => {
+      if (!selectedChat || !token) return;
+
+      fetch(`http://localhost:8000/api/conversations/${selectedChat.id}/messages`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+          Accept: "application/json",
+        },
+      })
+        .then((res) => res.json())
+        .then((data) => setMessages(data));
+    };
+    //osvezavanje
+  useEffect(() => {
+    if (!selectedChat || !token) return;
+
+    const id = setInterval(fetchMessages, 1000);
+    setIntervalId(id);
+
+   
+    return () => clearInterval(id);
+  }, [selectedChat, token]);
+
+    //ucitavanje poruka odmah kada se odabere chat
+    useEffect(() => {
+      fetchMessages(); 
+    }, [selectedChat]);
 
   useEffect(() => {
     if (!selectedChat || !token) return;
@@ -169,29 +205,36 @@ export default function ChatPage() {
       alert("Vaš nalog je trenutno suspendovan. Ne možete slati poruke.");
       return;
     }
-
+  
     if (!newMessage.trim() && attachments.length === 0) return;
-
+  
     const formData = new FormData();
     formData.append("user_id", currentUserId);
     formData.append("content", newMessage);
-    attachments.forEach((file, idx) => {
-      formData.append(`attachments[${idx}]`, file);
+  
+    attachments.forEach((file) => {
+      formData.append("attachments[]", file);
     });
-
+  
     const res = await fetch(`http://localhost:8000/api/conversations/${selectedChat.id}/messages`, {
       method: "POST",
       headers: {
         Authorization: `Bearer ${token}`,
+        Accept: "application/json",
       },
       body: formData,
     });
-
+  
     if (res.ok) {
       setNewMessage("");
       setAttachments([]);
+      fetchMessages();
+    } else {
+      const errorData = await res.json();
+      console.error("Greška:", errorData);
     }
   };
+  
 
   const handleLogout = async () => {
     if (!window.confirm("Da li ste sigurni da želite da se odjavite?")) return;
@@ -365,108 +408,27 @@ export default function ChatPage() {
                 </button>
               </div>
             </div>
-            <div className="chat-messages">
-              {messages.map((msg) => (
-                <div
-                  key={msg.id}
-                  className={`chat-message ${parseInt(msg.user_id) === currentUserId ? "me" : "them"} ${selectedMessageId === msg.id ? "selected" : ""
-                    }`}
-                  onClick={() => handleMessageClick(msg.id)}
-                >
-                  <span>{msg.content}</span>
-                  {msg.attachments && msg.attachments.length > 0 && (
-                    <div className="chat-attachments">
-                      {msg.attachments.map((att) => {
-                        const fileName = att.file_path.split("/").pop();
-                        const isImage = att.file_type && att.file_type.startsWith("image/");
-
-                        return (
-                          <div key={att.id} className="attachment-bubble">
-                            {isImage ? (
-                              <img
-                                src={`http://localhost:8000/storage/${att.file_path}`}
-                                alt={fileName}
-                                className="chat-image"
-                              />
-                            ) : (
-                              <div className="attachment-file">
-                                <span className="attachment-icon">📎</span>
-                                <span className="attachment-name">{fileName}</span>
-                                <button
-                                  className="download-btn"
-                                  onClick={() => handleDownload(att.file_path, fileName)}
-                                >
-                                  <Download size={16} />
-                                </button>
-                              </div>
-                            )}
-                          </div>
-                        );
-                      })}
-                    </div>
-                  )}
-                  {parseInt(msg.user_id) === currentUserId && selectedMessageId === msg.id && (
-                    <button className="delete-message-btn" onClick={() => handleDeleteMessage(msg.id)}>❌</button>
-                  )}
-                  {parseInt(msg.user_id) !== currentUserId && selectedMessageId === msg.id && (
-                    <button className="report-btn" onClick={() => handleReportMessage(msg.id)}>🚨 Prijavi</button>
-                  )}
-                </div>
-              ))}
-            </div>
-            {isSuspended ? (
-              <div className="chat-suspended-msg">
-                <p style={{
-                  backgroundColor: "#fee2e2",
-                  padding: "20px",
-                  textAlign: "center",
-                  color: "#b91c1c",
-                  fontWeight: "bold",
-                  fontSize: "1.3rem",
-                  borderRadius: "12px",
-                  margin: "10px 0"
-                }}>
-                  Vaš nalog je trenutno suspendovan. Ne možete slati poruke.
-                </p>
-              </div>
-            ) : (
-              <>
-                {attachments.length > 0 && (
-                  <div className="attachment-preview">
-                    <p>Prilozi:</p>
-                    <ul>
-                      {attachments.map((file, idx) => (
-                        <li key={idx}>{file.name}</li>
-                      ))}
-                    </ul>
-                  </div>
-                )}
-                <div className="chat-input">
-                  <label htmlFor="file-input" className="attachment-icon">
-                    <Paperclip size={20} />
-                  </label>
-                  <input
-                    id="file-input"
-                    type="file"
-                    multiple
-                    onChange={(e) => setAttachments(Array.from(e.target.files))}
-                    style={{ display: "none" }}
-                  />
-                  <input
-                    type="text"
-                    placeholder="Ukucaj poruku..."
-                    value={newMessage}
-                    onChange={(e) => setNewMessage(e.target.value)}
-                  />
-                  <button onClick={handleSend}>Pošalji</button>
-                </div>
-              </>
-            )}
-          </>
-        ) : (
-          <div className="chat-placeholder">Izaberi razgovor da vidiš poruke</div>
-        )}
-      </div>
+            <ChatWindow
+      selectedChat={selectedChat}
+      currentUserId={currentUserId}
+      messages={messages}
+      isSuspended={isSuspended}
+      handleSend={handleSend}
+      newMessage={newMessage}
+      setNewMessage={setNewMessage}
+      attachments={attachments}
+      setAttachments={setAttachments}
+      handleDownload={handleDownload}
+      handleMessageClick={handleMessageClick}
+      selectedMessageId={selectedMessageId}
+      handleDeleteMessage={handleDeleteMessage}
+      handleReportMessage={handleReportMessage}
+    />
+  </>
+) : (
+  <div className="chat-placeholder">Izaberi razgovor da vidiš poruke</div>
+)}
+</div>
 
       {showChatModal && (
         <div className="modal-overlay">
@@ -506,6 +468,7 @@ export default function ChatPage() {
                 </ul>
                 <input
                   type="text"
+                  
                   placeholder="Naziv grupe"
                   value={groupTitle}
                   onChange={(e) => setGroupTitle(e.target.value)}

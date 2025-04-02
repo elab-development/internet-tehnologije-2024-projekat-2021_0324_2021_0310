@@ -1,11 +1,37 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import "./ModeratorPage.css";
+import { useNavigate } from "react-router-dom";
 
 const ModeratorPage = () => {
   const [reports, setReports] = useState([]);
   const [loading, setLoading] = useState(true);
   const [filter, setFilter] = useState("all");
   const token = localStorage.getItem("token");
+  const navigate = useNavigate();
+
+   useEffect(() => {
+      if (!token) navigate("/");
+    }, [navigate, token]);
+
+    const handleLogout = async () => {
+      if (!window.confirm("Da li ste sigurni da želite da se odjavite?")) return;
+  
+      try {
+        await fetch("http://localhost:8000/api/logout", {
+          method: "POST",
+          headers: {
+            Authorization: `Bearer ${token}`,
+            Accept: "application/json",
+          },
+        });
+  
+        localStorage.removeItem("token");
+        localStorage.removeItem("userId");
+        navigate("/");
+      } catch (err) {
+        console.error("Greška prilikom odjave:", err);
+      }
+    };
 
   const fetchReports = () => {
     setLoading(true);
@@ -26,7 +52,9 @@ const ModeratorPage = () => {
       });
   };
 
-  
+  useEffect(() => {
+    fetchReports();
+  }, []);
 
   const handleSuspend = (userId) => {
     if (!window.confirm("Da li ste sigurni da želite da suspendujete ovog korisnika?")) return;
@@ -51,7 +79,7 @@ const ModeratorPage = () => {
         alert(errorData.message || "Došlo je do greške pri suspendovanju.");
       });
   };
-
+  
   const handleResolve = (reportId) => {
     if (!window.confirm("Označiti ovu prijavu kao rešenu bez suspenzije?")) return;
 
@@ -97,14 +125,17 @@ const ModeratorPage = () => {
 
   return (
     <div className="moderator-container">
+      <button onClick={handleLogout} className="logout-btn2">
+                  <span className="logout-icon">→</span> Logout
+                </button>
       <h2>Prijavljene poruke</h2>
-
+      
       <div style={{ marginBottom: "15px" }}>
         <label>Filter: </label>
         <select value={filter} onChange={(e) => setFilter(e.target.value)}>
           <option value="all">Sve</option>
-          <option value="unresolved">Neresene</option>
-          <option value="resolved">Resene</option>
+          <option value="unresolved">Nerešene</option>
+          <option value="resolved">Rešene</option>
         </select>
       </div>
 

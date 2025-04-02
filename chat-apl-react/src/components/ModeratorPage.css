@@ -25,6 +25,34 @@ body {
   font-size: 2.2rem;
   margin-bottom: 30px;
 }
+.logout-btn2 {
+  position: absolute; /* Pozicionira dugme apsolutno unutar roditelja */
+  right: 20px; /* Udaljenost od desne ivice roditelja */
+  top: 20px; /* Udaljenost od vrha roditelja (možeš promeniti vrednost prema potrebama) */
+  background-color: #99a9cf;
+  color: white;
+  border: none;
+  padding: 8px 18px;
+  font-weight: 600;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 0.95rem;
+  transition: background-color 0.3s, transform 0.2s;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.logout-btn:hover {
+  background-color: #7c90ab;
+  transform: translateY(-1px);
+}
+
+.logout-icon {
+  font-size: 1.2rem;
+  transform: translateY(-1px);
+}
+
 
 /* Filter dropdown */
 .moderator-container select {

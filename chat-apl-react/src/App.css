@@ -372,3 +372,17 @@ button:hover {
 .close-btn:hover {
   background-color: #334155;
 }
+.role-select {
+  padding: 6px 10px;
+  border-radius: 6px;
+  background-color: #ccffcc;
+  color: #000000;
+  border: 1px solid, #ccffcc;
+  font-size: 14px;
+  transition: border-color 0.2s;
+}
+
+.role-select:focus {
+  border-color: #f63b3b;
+  outline: none;
+}

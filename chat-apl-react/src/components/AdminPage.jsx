@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { Chart } from "react-google-charts";
+import { useNavigate } from "react-router-dom";
 
 export default function AdminPage() {
   const [hasAccess, setHasAccess] = useState(false);
@@ -9,6 +10,14 @@ export default function AdminPage() {
   const [isLoading, setIsLoading] = useState(true);
   const [messageCount, setMessageCount] = useState(0);
   const [reportCount, setReportCount] = useState(0);
+
+  const token = localStorage.getItem("token");
+  const navigate = useNavigate();
+
+   useEffect(() => {
+      if (!token) navigate("/");
+    }, [navigate, token]);
+
 
   useEffect(() => {
     const role = localStorage.getItem("role");
@@ -64,7 +73,53 @@ export default function AdminPage() {
       console.error("❌ Greška u dohvatanju broja prijava:", error);
     }
   };
+  const handleLogout = async () => {
+    if (!window.confirm("Da li ste sigurni da želite da se odjavite?")) return;
 
+    try {
+      await fetch("http://localhost:8000/api/logout", {
+        method: "POST",
+        headers: {
+          Authorization: `Bearer ${token}`,
+          Accept: "application/json",
+        },
+      });
+
+      localStorage.removeItem("token");
+      localStorage.removeItem("userId");
+      navigate("/");
+    } catch (err) {
+      console.error("Greška prilikom odjave:", err);
+    }
+  };
+  const handleRoleChange = async (userId, newRole) => {
+    const token = localStorage.getItem("token");
+  
+    try {
+      const response = await fetch(`http://localhost:8000/api/admin/users/${userId}/role`, {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+          Accept: "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify({ role: newRole }),
+      });
+  
+      const data = await response.json();
+  
+      if (response.ok) {
+        alert("Uloga uspešno promenjena.");
+        fetchAllUsers(); // ponovo učitaj korisnike
+      } else {
+        alert(data.message || "Greška pri ažuriranju uloge.");
+      }
+    } catch (err) {
+      console.error(err);
+      alert("Greška pri slanju zahteva.");
+    }
+  };
+  
   const fetchAllUsers = async () => {
     try {
       const token = localStorage.getItem("token");
@@ -119,6 +174,9 @@ export default function AdminPage() {
 
   return (
     <div className="admin-container">
+      <button onClick={handleLogout} className="logout-btn2">
+                  <span className="logout-icon">→</span> Logout
+                </button>
       <div className="admin-box">
         <h1 className="admin-title">Admin Panel</h1>
         <p className="admin-subtitle">
@@ -164,7 +222,17 @@ export default function AdminPage() {
                   <td>{user.id}</td>
                   <td>{user.name || "-"}</td>
                   <td>{user.email}</td>
-                  <td>{user.role || "korisnik"}</td>
+                  <td>
+  <select
+  className="role-select"
+    value={user.role}
+    onChange={(e) => handleRoleChange(user.id, e.target.value)}
+  >
+    <option value="user">Korisnik</option>
+    <option value="moderator">Moderator</option>
+    <option value="admin">Administrator</option>
+  </select>
+</td>
                   <td>{new Date(user.created_at).toLocaleString()}</td>
                 </tr>
               ))}

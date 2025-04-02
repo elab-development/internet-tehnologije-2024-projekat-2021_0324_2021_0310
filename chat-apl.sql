@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Mar 31, 2025 at 12:28 AM
+-- Generation Time: Apr 01, 2025 at 07:38 PM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -177,7 +177,23 @@ INSERT INTO `messages` (`id`, `user_id`, `conversation_id`, `content`, `created_
 (51, 2, 1, '', '2025-03-30 11:22:58', '2025-03-30 11:22:58'),
 (52, 2, 1, '', '2025-03-30 11:29:48', '2025-03-30 11:29:48'),
 (53, 2, 1, 'casdadadadad', '2025-03-30 15:12:26', '2025-03-30 15:12:26'),
-(54, 2, 3, 'dasdad', '2025-03-30 15:12:37', '2025-03-30 15:12:37');
+(54, 2, 3, 'dasdad', '2025-03-30 15:12:37', '2025-03-30 15:12:37'),
+(55, 1, 1, '', '2025-04-01 14:40:34', '2025-04-01 14:40:34'),
+(56, 1, 1, '', '2025-04-01 14:41:31', '2025-04-01 14:41:31'),
+(57, 1, 1, '', '2025-04-01 14:44:21', '2025-04-01 14:44:21'),
+(58, 1, 1, '', '2025-04-01 14:57:29', '2025-04-01 14:57:29'),
+(59, 1, 1, '', '2025-04-01 15:04:41', '2025-04-01 15:04:41'),
+(60, 1, 1, '', '2025-04-01 15:12:22', '2025-04-01 15:12:22'),
+(61, 1, 1, '', '2025-04-01 15:19:17', '2025-04-01 15:19:17'),
+(62, 1, 1, '', '2025-04-01 16:51:15', '2025-04-01 16:51:15'),
+(63, 1, 1, '', '2025-04-01 17:12:32', '2025-04-01 17:12:32'),
+(64, 1, 1, '', '2025-04-01 17:13:09', '2025-04-01 17:13:09'),
+(65, 1, 1, '', '2025-04-01 17:13:35', '2025-04-01 17:13:35'),
+(66, 1, 1, '', '2025-04-01 17:18:34', '2025-04-01 17:18:34'),
+(67, 1, 1, '', '2025-04-01 17:28:59', '2025-04-01 17:28:59'),
+(68, 2, 1, '', '2025-04-01 17:33:17', '2025-04-01 17:33:17'),
+(69, 2, 1, '', '2025-04-01 17:33:17', '2025-04-01 17:33:17'),
+(70, 2, 1, '', '2025-04-01 17:33:38', '2025-04-01 17:33:38');
 
 -- --------------------------------------------------------
 
@@ -190,8 +206,28 @@ CREATE TABLE `message_attachments` (
   `message_id` bigint(20) UNSIGNED NOT NULL,
   `file_path` varchar(255) NOT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
-  `updated_at` timestamp NULL DEFAULT NULL
+  `updated_at` timestamp NULL DEFAULT NULL,
+  `file_type` varchar(255) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Dumping data for table `message_attachments`
+--
+
+INSERT INTO `message_attachments` (`id`, `message_id`, `file_path`, `created_at`, `updated_at`, `file_type`) VALUES
+(1, 57, 'attachments/DDepbapPyq4W3YxAYZp8uXCZ2bxFggrcVpfOaLrr.html', '2025-04-01 14:44:21', '2025-04-01 14:44:21', 'text/plain'),
+(2, 58, 'attachments/xbYBSkvTuIFPGaklf2iVkb5QDgAFm5fUn2PlpHyJ.html', '2025-04-01 14:57:30', '2025-04-01 14:57:30', 'text/plain'),
+(3, 59, 'attachments/vurnPESIUt1qUPUiJSYikUd4ZWDUjC9c5UVj7X7r.html', '2025-04-01 15:04:41', '2025-04-01 15:04:41', 'text/plain'),
+(4, 60, 'attachments/G2bqsnFzw9Amt8n6qpxNvnnQTharZupmfyrZUB2B.html', '2025-04-01 15:12:22', '2025-04-01 15:12:22', 'text/plain'),
+(5, 62, 'attachments/ddd.txt', '2025-04-01 16:51:15', '2025-04-01 16:51:15', 'text/plain'),
+(6, 63, 'attachments/slika.png', '2025-04-01 17:12:32', '2025-04-01 17:12:32', 'image/png'),
+(7, 64, 'attachments/2024-04-23 Marko Ćirić (Pregovaranje).pdf', '2025-04-01 17:13:09', '2025-04-01 17:13:09', 'application/pdf'),
+(8, 65, 'attachments/2024-04-23 Marko Ćirić (Pregovaranje) (1).pdf', '2025-04-01 17:13:35', '2025-04-01 17:13:35', 'application/pdf'),
+(9, 66, 'attachments/Screenshot_1.png', '2025-04-01 17:18:34', '2025-04-01 17:18:34', 'image/png'),
+(10, 67, 'attachments/2024-04-23 Marko Ćirić (Pregovaranje) (1) (1).pdf', '2025-04-01 17:28:59', '2025-04-01 17:28:59', 'application/pdf'),
+(11, 68, 'attachments/Darko_Cmiljanic_zavrsni_rad.pdf', '2025-04-01 17:33:17', '2025-04-01 17:33:17', 'application/pdf'),
+(12, 69, 'attachments/Darko_Cmiljanic_zavrsni_rad.pdf', '2025-04-01 17:33:17', '2025-04-01 17:33:17', 'application/pdf'),
+(13, 70, 'attachments/chat-apl-ana.sql', '2025-04-01 17:33:38', '2025-04-01 17:33:38', 'application/octet-stream');
 
 -- --------------------------------------------------------
 
@@ -231,7 +267,8 @@ INSERT INTO `migrations` (`id`, `migration`, `batch`) VALUES
 (19, '2025_03_29_114343_create_reported_messages_table', 4),
 (20, '2025_03_29_120522_add_suspended_until_to_users_table', 5),
 (21, '2025_03_30_150323_add_resolved_to_reported_messages_table', 6),
-(22, '2025_03_30_150457_add_resolved_by_suspension_to_reported_messages_table', 6);
+(22, '2025_03_30_150457_add_resolved_by_suspension_to_reported_messages_table', 6),
+(23, '2025_04_01_164323_add_file_type_to_message_attachments_table', 7);
 
 -- --------------------------------------------------------
 
@@ -352,7 +389,29 @@ INSERT INTO `personal_access_tokens` (`id`, `tokenable_type`, `tokenable_id`, `n
 (83, 'App\\Models\\User', 2, 'auth_token', '45c3ecc9395f39a9d9f21a77c22524adc84e15ecb9b67734c31f1a525e23c3e7', '[\"*\"]', '2025-03-30 15:10:48', NULL, '2025-03-30 15:10:09', '2025-03-30 15:10:48'),
 (84, 'App\\Models\\User', 6, 'auth_token', 'ebc4c71c0caf4d8f82e0cb1e6839e44dfc947221c4c2b444bf4cbffa6a889540', '[\"*\"]', '2025-03-30 15:11:14', NULL, '2025-03-30 15:11:07', '2025-03-30 15:11:14'),
 (85, 'App\\Models\\User', 1, 'auth_token', '7b86dfc31f0d7abf206be2683b7e41852cad807b0374cacc00394ca72f588b04', '[\"*\"]', '2025-03-30 15:12:01', NULL, '2025-03-30 15:11:35', '2025-03-30 15:12:01'),
-(86, 'App\\Models\\User', 2, 'auth_token', '7c486ee4ebd2b031b775daf8f1d3ac71a7ce218b46e91907cfef5e4fba92d2bb', '[\"*\"]', '2025-03-30 15:12:44', NULL, '2025-03-30 15:12:18', '2025-03-30 15:12:44');
+(86, 'App\\Models\\User', 2, 'auth_token', '7c486ee4ebd2b031b775daf8f1d3ac71a7ce218b46e91907cfef5e4fba92d2bb', '[\"*\"]', '2025-03-30 15:12:44', NULL, '2025-03-30 15:12:18', '2025-03-30 15:12:44'),
+(87, 'App\\Models\\User', 2, 'auth_token', '525a131fc7254746686eddbe8282aa92e62dc7bf8a7fb52fe3b2a0fc7e93182e', '[\"*\"]', '2025-03-31 08:48:12', NULL, '2025-03-31 08:40:08', '2025-03-31 08:48:12'),
+(88, 'App\\Models\\User', 1, 'auth_token', 'ecddce4e199e2f6954d5780d2eb1678242e7cb2a8ee40fccdb44573a427f2670', '[\"*\"]', '2025-04-01 09:51:44', NULL, '2025-04-01 09:51:38', '2025-04-01 09:51:44'),
+(89, 'App\\Models\\User', 1, 'auth_token', 'bcbb572b6cecc8ede60891536c60b09e7dcbfcf3e92b3310291318d3d5c7aad8', '[\"*\"]', '2025-04-01 10:02:40', NULL, '2025-04-01 09:54:04', '2025-04-01 10:02:40'),
+(90, 'App\\Models\\User', 1, 'auth_token', 'f6e97a52b74c3820b4512870f0e9e95d4c776b0a88e87a9e07f4044545df8768', '[\"*\"]', '2025-04-01 10:15:18', NULL, '2025-04-01 10:02:32', '2025-04-01 10:15:18'),
+(92, 'App\\Models\\User', 1, 'auth_token', 'f8ec1051cd2bce8a183d9164248fac97b3d41a7ff5b8674e093bdd4746423304', '[\"*\"]', '2025-04-01 13:47:28', NULL, '2025-04-01 10:18:07', '2025-04-01 13:47:28'),
+(93, 'App\\Models\\User', 1, 'auth_token', '78cbddefdfdefa4b67ad56ef84d32b19f5a04aa9646d5e035d666c0e5b12c46b', '[\"*\"]', '2025-04-01 13:47:28', NULL, '2025-04-01 10:21:26', '2025-04-01 13:47:28'),
+(94, 'App\\Models\\User', 8, 'auth_token', 'c475863816325446f3c035769e3a28c93f1598e1ffaf428a7ca751db2d7880de', '[\"*\"]', NULL, NULL, '2025-04-01 13:35:00', '2025-04-01 13:35:00'),
+(95, 'App\\Models\\User', 8, 'auth_token', 'c6aa41d5ff2c82b28490ff94a505bc18bbb0db28ea5d75a0274fc177f6e62400', '[\"*\"]', '2025-04-01 13:35:18', NULL, '2025-04-01 13:35:14', '2025-04-01 13:35:18'),
+(96, 'App\\Models\\User', 7, 'auth_token', '745afc2ce2e2f9f24ea2bd668df296b8f96bc9bd73ba3270b12d9f642d7d8138', '[\"*\"]', '2025-04-01 13:55:02', NULL, '2025-04-01 13:35:32', '2025-04-01 13:55:02'),
+(97, 'App\\Models\\User', 8, 'auth_token', '47336914e9efe897998bd172dac8a677b54360f66b2ed3affe2b0fa9bb4da359', '[\"*\"]', '2025-04-01 13:55:24', NULL, '2025-04-01 13:55:21', '2025-04-01 13:55:24'),
+(98, 'App\\Models\\User', 7, 'auth_token', '486ef8624c755fe882e716c3958c152dc5c695bcf0a6dba747a32064cbbcac30', '[\"*\"]', '2025-04-01 13:56:41', NULL, '2025-04-01 13:56:28', '2025-04-01 13:56:41'),
+(99, 'App\\Models\\User', 8, 'auth_token', '1d57467bba5cdfee36c282425dd089e5bdeefc9f341aaa5f9e4f2b01183ccbc1', '[\"*\"]', '2025-04-01 13:59:10', NULL, '2025-04-01 13:57:02', '2025-04-01 13:59:10'),
+(100, 'App\\Models\\User', 8, 'auth_token', '805ca906de1fb2e42f02cf745059b6d356eb0c7d113c007bbb9fa19f0061485c', '[\"*\"]', '2025-04-01 14:00:09', NULL, '2025-04-01 13:59:27', '2025-04-01 14:00:09'),
+(101, 'App\\Models\\User', 1, 'auth_token', 'be998b714dcd894d881c526617b2b147927318f01a94319c80011cccd254b279', '[\"*\"]', '2025-04-01 14:00:41', NULL, '2025-04-01 14:00:25', '2025-04-01 14:00:41'),
+(102, 'App\\Models\\User', 7, 'auth_token', '2cf1afa6db7baeba81dd510b65ca085275ef443333afb09bac97892a470abde4', '[\"*\"]', '2025-04-01 14:07:26', NULL, '2025-04-01 14:02:28', '2025-04-01 14:07:26'),
+(103, 'App\\Models\\User', 1, 'auth_token', '9242dd119ccd1c8c20882f0b0dc5adb1c941a21a3f95f5683b72add3cf9ce644', '[\"*\"]', '2025-04-01 14:10:47', NULL, '2025-04-01 14:10:41', '2025-04-01 14:10:47'),
+(104, 'App\\Models\\User', 1, 'auth_token', '7b60ebc18c539e526d05880ef7d7a8c5ffe3b1107ae70d1233ac81f9b5100f26', '[\"*\"]', '2025-04-01 16:51:27', NULL, '2025-04-01 14:40:23', '2025-04-01 16:51:27'),
+(105, 'App\\Models\\User', 1, 'auth_token', '514ad5063aaf258766817f2daae908754e285c47be95e5e971e441b882df2263', '[\"*\"]', '2025-04-01 16:57:56', NULL, '2025-04-01 16:57:05', '2025-04-01 16:57:56'),
+(106, 'App\\Models\\User', 1, 'auth_token', '28cd944853234bf180376d40261137b8c588e00c52c93a518c9a3041f06ecafa', '[\"*\"]', '2025-04-01 17:13:35', NULL, '2025-04-01 17:07:23', '2025-04-01 17:13:35'),
+(107, 'App\\Models\\User', 2, 'auth_token', '7278348a64900fa8a9a201660a81c57a4b6d445b171ada78df8fe29b1dcf130a', '[\"*\"]', '2025-04-01 17:15:11', NULL, '2025-04-01 17:15:04', '2025-04-01 17:15:11'),
+(108, 'App\\Models\\User', 1, 'auth_token', 'fa44d0184903bd2d263c07c956242734c18475e739654e14798a6510a1835475', '[\"*\"]', '2025-04-01 17:29:10', NULL, '2025-04-01 17:18:18', '2025-04-01 17:29:10'),
+(109, 'App\\Models\\User', 2, 'auth_token', '244bca024d6a518b77ca4d328449ccbbc7ac8795338a15810d60430fd0dc225a', '[\"*\"]', '2025-04-01 17:33:47', NULL, '2025-04-01 17:32:36', '2025-04-01 17:33:47');
 
 -- --------------------------------------------------------
 
@@ -399,6 +458,13 @@ CREATE TABLE `sessions` (
   `last_activity` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
+--
+-- Dumping data for table `sessions`
+--
+
+INSERT INTO `sessions` (`id`, `user_id`, `ip_address`, `user_agent`, `payload`, `last_activity`) VALUES
+('zGRU45dpfWLkqdLo2YJH7YEbxnwC4zsG9NDKCFGz', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/132.0.0.0 Safari/537.36 OPR/117.0.0.0', 'YTozOntzOjY6Il90b2tlbiI7czo0MDoiZG5NbzdmS3JtR0l4RmRncUlxZHpzMjdWSjBlbldXelVCZHJQQmdNUiI7czo5OiJfcHJldmlvdXMiO2E6MTp7czozOiJ1cmwiO3M6NDc6Imh0dHA6Ly9sb2NhbGhvc3Q6ODAwMC9kb3dubG9hZC9jaGF0LWFwbC1hbmEuc3FsIjt9czo2OiJfZmxhc2giO2E6Mjp7czozOiJvbGQiO2E6MDp7fXM6MzoibmV3IjthOjA6e319fQ==', 1743528830);
+
 -- --------------------------------------------------------
 
 --
@@ -428,7 +494,8 @@ INSERT INTO `users` (`id`, `name`, `email`, `password`, `last_seen`, `created_at
 (4, 'Milica User', 'milica@example.com', '$2y$12$YJFrRqyso8PyKabf6nV8KOqJA78v.4moEJMbq9xHzRPqi.e5oQRyq', NULL, '2025-03-14 11:08:55', '2025-03-14 11:08:55', 'user', NULL),
 (5, 'marijana User', 'marijana@example.com', '$2y$12$029ZeMF50duXTVgo2lxi4Oiu4gemSpxWMqVH29BblCgeSwEiFQGkC', NULL, '2025-03-14 11:31:34', '2025-03-14 11:31:34', 'user', NULL),
 (6, 'moderator', 'moderator@example.com', '$2y$12$5qDVuZUl0Es/fsLlcywM5urynIt6zOUNM9pRKuWOwS1F2YSzdZGp.', NULL, '2025-03-29 19:02:01', '2025-03-29 19:02:01', 'moderator', NULL),
-(7, 'admin', 'admin@example.com', '$2y$12$3ZYIgeGvvfjGUn5Mv.samOWZpRWzXtQvV7KBG6GkQilj4Ia8aRUr.', NULL, '2025-03-29 19:07:52', '2025-03-29 19:07:52', 'admin', NULL);
+(7, 'admin', 'admin@example.com', '$2y$12$3ZYIgeGvvfjGUn5Mv.samOWZpRWzXtQvV7KBG6GkQilj4Ia8aRUr.', NULL, '2025-03-29 19:07:52', '2025-03-29 19:07:52', 'admin', NULL),
+(8, 'Marija', 'marija@example.com', '$2y$12$Lxdgmeq9lLmilh3L0qncQuxLM21c9hTB05X251sZRjtrk8CDL3HjS', NULL, '2025-04-01 13:35:00', '2025-04-01 14:07:24', 'user', NULL);
 
 --
 -- Indexes for dumped tables
@@ -538,25 +605,25 @@ ALTER TABLE `conversation_user`
 -- AUTO_INCREMENT for table `messages`
 --
 ALTER TABLE `messages`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=55;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=71;
 
 --
 -- AUTO_INCREMENT for table `message_attachments`
 --
 ALTER TABLE `message_attachments`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=14;
 
 --
 -- AUTO_INCREMENT for table `migrations`
 --
 ALTER TABLE `migrations`
-  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=23;
+  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=24;
 
 --
 -- AUTO_INCREMENT for table `personal_access_tokens`
 --
 ALTER TABLE `personal_access_tokens`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=87;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=110;
 
 --
 -- AUTO_INCREMENT for table `reported_messages`
@@ -568,7 +635,7 @@ ALTER TABLE `reported_messages`
 -- AUTO_INCREMENT for table `users`
 --
 ALTER TABLE `users`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
 
 --
 -- Constraints for dumped tables
